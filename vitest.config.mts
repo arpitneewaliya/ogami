@@ -12,6 +12,11 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["registry/**/*.test.ts", "registry/**/*.test.tsx"],
+    include: [
+      "registry/**/*.test.ts",
+      "registry/**/*.test.tsx",
+      "app/**/*.test.ts",
+      "app/**/*.test.tsx",
+    ],
   },
 });

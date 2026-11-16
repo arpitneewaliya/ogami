@@ -1,0 +1,8 @@
+{
+  "id": "minimal-tech",
+  "name": "Minimal Tech",
+  "description": "Clean dark-mode announcement card for developer tools, releases, and documentation.",
+  "author": "Jane Doe",
+  "tags": ["minimal", "dark", "tech", "announcement"],
+  "version": "1.0.0"
+}

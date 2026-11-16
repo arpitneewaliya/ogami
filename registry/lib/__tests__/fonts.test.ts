@@ -7,12 +7,15 @@ import {
   clearFontCache,
   detectScripts,
   findUnsupportedScripts,
+  getCachedFontPaths,
   getJapaneseFontCmap,
   getSupportedScripts,
   hasJapaneseFontPack,
   isCodepointInGeist,
   loadFontsForScripts,
   parseTtfCmapCodepoints,
+  stripEmojiFromParams,
+  stripEmojiFromText,
 } from "../fonts";
 
 const japanesePackAvailable = await hasJapaneseFontPack();
@@ -166,6 +169,27 @@ describe("font loader and caching", () => {
     expect(first[0]?.style).toBe("normal");
     expect(first[0]?.data.byteLength).toBe(125_956);
     expect(second[0]?.data).toBe(first[0]?.data);
+    expect(getCachedFontPaths()).toEqual(["registry/fonts/Geist-Regular.ttf"]);
+  });
+
+  it("strips emoji graphemes while keeping Geist-covered symbols intact", () => {
+    expect(stripEmojiFromText("Launch 🚀 Star ⭐ © ® ™ ☺")).toEqual({
+      cleaned: "Launch Star © ® ™ ☺",
+      removed: ["🚀", "⭐"],
+    });
+
+    const { sanitized, warnings } = stripEmojiFromParams({
+      title: "Hello ☺️ 1️⃣",
+      subtitle: "Built by Jane Doe © 2026",
+    });
+
+    expect(sanitized).toEqual({
+      title: "Hello",
+      subtitle: "Built by Jane Doe © 2026",
+    });
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]?.field).toBe("title");
+    expect(warnings[0]?.removed).toEqual(["☺️", "1️⃣"]);
   });
 
   it.skipIf(!japanesePackAvailable)(

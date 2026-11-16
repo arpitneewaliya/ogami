@@ -44,6 +44,12 @@ export interface UnsupportedScriptIssue {
   sampleChar: string;
 }
 
+export interface EmojiWarning {
+  field: string;
+  removed: string[];
+  reason: string;
+}
+
 export class UnsupportedScriptError extends Error {
   readonly code = "UNSUPPORTED_SCRIPT" as const;
   readonly issues: readonly UnsupportedScriptIssue[];
@@ -266,6 +272,10 @@ const ASCII_DIGIT_HASH_STAR_RE = /^[#*0-9]$/;
 
 export function clearFontCache(): void {
   fontCache.clear();
+}
+
+export function getCachedFontPaths(): string[] {
+  return Array.from(fontCache.keys());
 }
 
 export function isCodepointInGeist(cp: number): boolean {
@@ -613,6 +623,91 @@ export function detectScripts(
   return Array.from(found);
 }
 
+const EMOJI_STRIP_REASON =
+  "Emoji characters were stripped because next/og fetches emoji SVGs over the network at render time.";
+
+export function stripEmojiFromText(text: string): {
+  cleaned: string;
+  removed: string[];
+} {
+  const removed: string[] = [];
+  const kept: string[] = [];
+
+  for (const { segment } of graphemeSegmenter.segment(text)) {
+    if (isEmojiGrapheme(segment)) {
+      removed.push(segment);
+    } else {
+      kept.push(segment);
+    }
+  }
+
+  if (removed.length === 0) {
+    return { cleaned: text, removed };
+  }
+
+  // Collapse extra spaces introduced when stripping inline or edge emojis.
+  const cleaned = kept.join("").replace(/ {2,}/g, " ").trim();
+  return { cleaned, removed };
+}
+
+function stripEmojiValue(
+  value: unknown,
+  prefix: string,
+  warnings: EmojiWarning[],
+): unknown {
+  if (typeof value === "string") {
+    const { cleaned, removed } = stripEmojiFromText(value);
+    if (removed.length > 0) {
+      warnings.push({
+        field: prefix,
+        removed: Array.from(new Set(removed)),
+        reason: EMOJI_STRIP_REASON,
+      });
+    }
+    return cleaned;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item, index) =>
+      stripEmojiValue(item, `${prefix}[${index}]`, warnings),
+    );
+  }
+
+  if (value !== null && typeof value === "object") {
+    const result: Record<string, unknown> = {};
+    for (const [key, nested] of Object.entries(value)) {
+      const nextPrefix = prefix ? `${prefix}.${key}` : key;
+      result[key] = stripEmojiValue(nested, nextPrefix, warnings);
+    }
+    return result;
+  }
+
+  return value;
+}
+
+export function stripEmojiFromParams<T extends Record<string, unknown>>(
+  inputs: T,
+): { sanitized: T; warnings: EmojiWarning[] } {
+  const warnings: EmojiWarning[] = [];
+  const sanitized = stripEmojiValue(inputs, "", warnings) as T;
+  return { sanitized, warnings };
+}
+
+export function detectScriptsInParams(
+  inputs: Record<string, unknown>,
+  options?: { japaneseCmap?: ReadonlySet<number> },
+): ScriptId[] {
+  const fields: Array<{ field: string; text: string }> = [];
+  collectStringFields(inputs, "", fields);
+  const found = new Set<ScriptId>();
+  for (const { text } of fields) {
+    for (const script of detectScripts(text, options)) {
+      found.add(script);
+    }
+  }
+  return Array.from(found);
+}
+
 function collectStringFields(
   value: unknown,
   prefix: string,
@@ -693,14 +788,26 @@ export function findUnsupportedScripts(
   return issues;
 }
 
-async function readFontEntry(relativePath: string): Promise<CachedFontEntry> {
-  const cached = fontCache.get(relativePath);
+async function readFontEntry(
+  cacheKey: string,
+  fontFile: "Geist-Regular.ttf" | "cjk/NotoSansJP-Regular.ttf",
+): Promise<CachedFontEntry> {
+  const cached = fontCache.get(cacheKey);
   if (cached) {
     return cached;
   }
 
   const loadPromise = (async (): Promise<CachedFontEntry> => {
-    const fullPath = path.join(process.cwd(), relativePath);
+    const fullPath =
+      fontFile === "Geist-Regular.ttf"
+        ? path.join(process.cwd(), "registry", "fonts", "Geist-Regular.ttf")
+        : path.join(
+            process.cwd(),
+            "registry",
+            "fonts",
+            "cjk",
+            "NotoSansJP-Regular.ttf",
+          );
     const buffer = await readFile(fullPath);
     const data = buffer.buffer.slice(
       buffer.byteOffset,
@@ -712,9 +819,9 @@ async function readFontEntry(relativePath: string): Promise<CachedFontEntry> {
 
   // Store promise so concurrent cold requests share a single disk read,
   // and evict if reading fails so transient FS issues can recover.
-  fontCache.set(relativePath, loadPromise);
+  fontCache.set(cacheKey, loadPromise);
   loadPromise.catch(() => {
-    fontCache.delete(relativePath);
+    fontCache.delete(cacheKey);
   });
 
   return loadPromise;
@@ -730,7 +837,15 @@ export async function hasJapaneseFontPack(): Promise<boolean> {
     }
   }
   try {
-    await access(path.join(process.cwd(), JAPANESE_FONT_RELATIVE_PATH));
+    await access(
+      path.join(
+        process.cwd(),
+        "registry",
+        "fonts",
+        "cjk",
+        "NotoSansJP-Regular.ttf",
+      ),
+    );
     return true;
   } catch {
     return false;
@@ -748,14 +863,20 @@ export async function getJapaneseFontCmap(): Promise<ReadonlySet<number> | null>
   if (!(await hasJapaneseFontPack())) {
     return null;
   }
-  const entry = await readFontEntry(JAPANESE_FONT_RELATIVE_PATH);
+  const entry = await readFontEntry(
+    JAPANESE_FONT_RELATIVE_PATH,
+    "cjk/NotoSansJP-Regular.ttf",
+  );
   return entry.cmap;
 }
 
 export async function loadFontsForScripts(
   scripts: readonly ScriptId[],
 ): Promise<LoadedFont[]> {
-  const geist = await readFontEntry(DEFAULT_LATIN_FONT_RELATIVE_PATH);
+  const geist = await readFontEntry(
+    DEFAULT_LATIN_FONT_RELATIVE_PATH,
+    "Geist-Regular.ttf",
+  );
   const loaded: LoadedFont[] = [
     {
       name: "Geist",
@@ -779,7 +900,10 @@ export async function loadFontsForScripts(
         },
       ]);
     }
-    const notoJp = await readFontEntry(JAPANESE_FONT_RELATIVE_PATH);
+    const notoJp = await readFontEntry(
+      JAPANESE_FONT_RELATIVE_PATH,
+      "cjk/NotoSansJP-Regular.ttf",
+    );
     loaded.push({
       name: "Noto Sans JP",
       data: notoJp.data,
