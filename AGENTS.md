@@ -1,3 +1,24 @@
+# Ogami: agent rules
+
+Ogami is an open-source, code-first OG image toolkit for Next.js.
+Before doing ANY work, read `docs/PROJECT_BRIEF.md` fully. It is the source of truth for intent, architecture, and phases.
+
+## Workflow
+
+- Work on ONE phase (or one small task) at a time. Never build ahead of the current phase.
+- Stop at the end of each phase: summarize what changed, what to test, and what's next. Wait for my go-ahead.
+- Before saying a task is done, run `npm run lint` and `npm run build` and report the results.
+- Keep commits small, one concern each. Do not commit unless I ask.
+- If something is ambiguous or the brief conflicts with reality, stop and ask with options and a recommendation.
+
+## Rules
+
+- Package manager is npm only. Do not use pnpm or yarn.
+- TypeScript strict. No `any` without a comment explaining why.
+- Verify APIs against current docs (Next.js, next/og / Satori, shadcn registry) before using them.
+- Keep `registry/` self-contained: it must not import from `app/`.
+- Never invent facts (platform sizes, library behavior, licenses). Look them up.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know
