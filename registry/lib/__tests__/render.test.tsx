@@ -100,7 +100,10 @@ describe("renderTemplate and fallback card", () => {
     expect(png).toEqual({ isPng: true, width: 1200, height: 630 });
 
     // Confirm NotoSansJP-Regular.ttf was never read or cached on a Latin/Cyrillic request.
-    expect(getCachedFontPaths()).toEqual(["registry/fonts/Geist-Regular.ttf"]);
+    expect(getCachedFontPaths().sort()).toEqual([
+      "registry/fonts/Geist-Bold.ttf",
+      "registry/fonts/Geist-Regular.ttf",
+    ]);
   });
 
   it.skipIf(!japanesePackAvailable)(
@@ -123,6 +126,7 @@ describe("renderTemplate and fallback card", () => {
         const png = parsePngDimensions(await result.response.arrayBuffer());
         expect(png).toEqual({ isPng: true, width: 1200, height: 630 });
         expect(getCachedFontPaths().sort()).toEqual([
+          "registry/fonts/Geist-Bold.ttf",
           "registry/fonts/Geist-Regular.ttf",
           "registry/fonts/cjk/NotoSansJP-Regular.ttf",
         ]);
@@ -240,7 +244,10 @@ describe("renderTemplate and fallback card", () => {
 
       const png = parsePngDimensions(await result.response.arrayBuffer());
       expect(png).toEqual({ isPng: true, width: 1200, height: 630 });
-      expect(getCachedFontPaths()).toEqual(["registry/fonts/Geist-Regular.ttf"]);
+      expect(getCachedFontPaths().sort()).toEqual([
+        "registry/fonts/Geist-Bold.ttf",
+        "registry/fonts/Geist-Regular.ttf",
+      ]);
     }
   });
 

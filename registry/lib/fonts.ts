@@ -256,6 +256,7 @@ const SIMPLIFIED_CHINESE_ONLY_CPS = new Set<number>([
 ]);
 
 const DEFAULT_LATIN_FONT_RELATIVE_PATH = "registry/fonts/Geist-Regular.ttf";
+const DEFAULT_LATIN_BOLD_FONT_RELATIVE_PATH = "registry/fonts/Geist-Bold.ttf";
 const JAPANESE_FONT_RELATIVE_PATH = "registry/fonts/cjk/NotoSansJP-Regular.ttf";
 
 interface CachedFontEntry {
@@ -788,9 +789,39 @@ export function findUnsupportedScripts(
   return issues;
 }
 
+function readFontBuffer(
+  fontFile:
+    | "Geist-Regular.ttf"
+    | "Geist-Bold.ttf"
+    | "cjk/NotoSansJP-Regular.ttf",
+): Promise<Buffer> {
+  if (fontFile === "Geist-Regular.ttf") {
+    return readFile(
+      path.join(process.cwd(), "registry", "fonts", "Geist-Regular.ttf"),
+    );
+  }
+  if (fontFile === "Geist-Bold.ttf") {
+    return readFile(
+      path.join(process.cwd(), "registry", "fonts", "Geist-Bold.ttf"),
+    );
+  }
+  return readFile(
+    path.join(
+      process.cwd(),
+      "registry",
+      "fonts",
+      "cjk",
+      "NotoSansJP-Regular.ttf",
+    ),
+  );
+}
+
 async function readFontEntry(
   cacheKey: string,
-  fontFile: "Geist-Regular.ttf" | "cjk/NotoSansJP-Regular.ttf",
+  fontFile:
+    | "Geist-Regular.ttf"
+    | "Geist-Bold.ttf"
+    | "cjk/NotoSansJP-Regular.ttf",
 ): Promise<CachedFontEntry> {
   const cached = fontCache.get(cacheKey);
   if (cached) {
@@ -798,21 +829,9 @@ async function readFontEntry(
   }
 
   const loadPromise = (async (): Promise<CachedFontEntry> => {
-    const fullPath =
-      fontFile === "Geist-Regular.ttf"
-        ? path.join(process.cwd(), "registry", "fonts", "Geist-Regular.ttf")
-        : path.join(
-            process.cwd(),
-            "registry",
-            "fonts",
-            "cjk",
-            "NotoSansJP-Regular.ttf",
-          );
-    const buffer = await readFile(fullPath);
-    const data = buffer.buffer.slice(
-      buffer.byteOffset,
-      buffer.byteOffset + buffer.byteLength,
-    );
+    const buffer = await readFontBuffer(fontFile);
+    const data = new ArrayBuffer(buffer.byteLength);
+    new Uint8Array(data).set(buffer);
     const cmap = parseTtfCmapCodepoints(data);
     return { data, cmap };
   })();
@@ -873,15 +892,21 @@ export async function getJapaneseFontCmap(): Promise<ReadonlySet<number> | null>
 export async function loadFontsForScripts(
   scripts: readonly ScriptId[],
 ): Promise<LoadedFont[]> {
-  const geist = await readFontEntry(
-    DEFAULT_LATIN_FONT_RELATIVE_PATH,
-    "Geist-Regular.ttf",
-  );
+  const [geistRegular, geistBold] = await Promise.all([
+    readFontEntry(DEFAULT_LATIN_FONT_RELATIVE_PATH, "Geist-Regular.ttf"),
+    readFontEntry(DEFAULT_LATIN_BOLD_FONT_RELATIVE_PATH, "Geist-Bold.ttf"),
+  ]);
   const loaded: LoadedFont[] = [
     {
       name: "Geist",
-      data: geist.data,
+      data: geistRegular.data,
       weight: 400,
+      style: "normal",
+    },
+    {
+      name: "Geist",
+      data: geistBold.data,
+      weight: 700,
       style: "normal",
     },
   ];

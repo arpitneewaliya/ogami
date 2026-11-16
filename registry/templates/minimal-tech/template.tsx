@@ -32,10 +32,12 @@ export default defineTemplate({
       maxWidth: 960,
       maxLines: 2,
       maxFontSize: 68,
-      minFontSize: 40,
+      minFontSize: 32,
       lineHeight: 1.15,
     });
-    const fontFamily = ctx.fonts.map((f) => f.name).join(", ");
+    const fontFamily = Array.from(new Set(ctx.fonts.map((f) => f.name))).join(
+      ", ",
+    );
 
     return (
       <div
@@ -99,6 +101,7 @@ export default defineTemplate({
                     border: "1px solid #27272a",
                     backgroundColor: "#18181b",
                     fontSize: 18,
+                    fontWeight: 700,
                     color: "#e4e4e7",
                     letterSpacing: "0.08em",
                   }}
@@ -131,9 +134,11 @@ export default defineTemplate({
                 style={{
                   display: "flex",
                   fontSize: fittedTitle.fontSize,
+                  fontWeight: 700,
                   lineHeight: fittedTitle.lineHeight,
                   letterSpacing: "-0.02em",
                   color: "#fafafa",
+                  wordBreak: "break-word",
                   overflow: "hidden",
                 }}
               >

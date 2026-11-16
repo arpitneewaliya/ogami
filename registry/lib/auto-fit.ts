@@ -68,11 +68,11 @@ function isFullwidthOrJapanese(cp: number): boolean {
 }
 
 function charWidthInEm(ch: string): number {
-  if (NARROW_ASCII.has(ch)) return 0.32;
-  if (WIDE_CHARS.has(ch)) return 0.85;
+  if (NARROW_ASCII.has(ch)) return 0.34;
+  if (WIDE_CHARS.has(ch)) return 0.88;
 
   const cp = ch.codePointAt(0);
-  if (cp === undefined) return 0.55;
+  if (cp === undefined) return 0.58;
 
   if (isFullwidthOrJapanese(cp)) return 1.0;
 
@@ -82,10 +82,10 @@ function charWidthInEm(ch: string): number {
     (cp >= 0x0410 && cp <= 0x042f) ||
     cp === 0x0401
   ) {
-    return 0.68;
+    return 0.72;
   }
 
-  return 0.55;
+  return 0.58;
 }
 
 export function estimateTextMetrics(text: string): {
@@ -107,7 +107,13 @@ export function estimateTextMetrics(text: string): {
     const w = charWidthInEm(ch);
     totalEm += w;
 
-    if (ch === " " || ch === "\t" || ch === "\n") {
+    if (
+      ch === " " ||
+      ch === "\t" ||
+      ch === "\n" ||
+      ch === "/" ||
+      ch === "-"
+    ) {
       if (currentTokenEm > longestTokenEm) {
         longestTokenEm = currentTokenEm;
       }

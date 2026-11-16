@@ -180,7 +180,7 @@ export function coerceSearchParams(
     if (fieldType === "number") {
       if (raw.trim() !== "") {
         const numeric = Number(raw);
-        result[key] = Number.isNaN(numeric) ? raw : numeric;
+        result[key] = Number.isFinite(numeric) ? numeric : raw;
       } else {
         result[key] = raw;
       }

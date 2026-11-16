@@ -1,0 +1,8 @@
+{
+  "id": "blog-post",
+  "name": "Blog Post",
+  "description": "Warm editorial card for articles, essays, and technical blog posts.",
+  "author": "Jane Doe",
+  "tags": ["blog", "article", "editorial", "light"],
+  "version": "1.0.0"
+}

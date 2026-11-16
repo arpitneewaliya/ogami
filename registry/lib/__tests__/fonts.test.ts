@@ -159,17 +159,25 @@ describe("font loader and caching", () => {
     clearFontCache();
   });
 
-  it("loads Geist-Regular.ttf from disk and caches its ArrayBuffer in memory", async () => {
+  it("loads Geist-Regular.ttf and Geist-Bold.ttf from disk and caches their ArrayBuffers in memory", async () => {
     const first = await loadFontsForScripts(["latin", "cyrillic"]);
     const second = await loadFontsForScripts(["latin"]);
 
-    expect(first).toHaveLength(1);
+    expect(first).toHaveLength(2);
     expect(first[0]?.name).toBe("Geist");
     expect(first[0]?.weight).toBe(400);
     expect(first[0]?.style).toBe("normal");
     expect(first[0]?.data.byteLength).toBe(125_956);
+    expect(first[1]?.name).toBe("Geist");
+    expect(first[1]?.weight).toBe(700);
+    expect(first[1]?.style).toBe("normal");
+    expect(first[1]?.data.byteLength).toBe(72_960);
     expect(second[0]?.data).toBe(first[0]?.data);
-    expect(getCachedFontPaths()).toEqual(["registry/fonts/Geist-Regular.ttf"]);
+    expect(second[1]?.data).toBe(first[1]?.data);
+    expect(getCachedFontPaths().sort()).toEqual([
+      "registry/fonts/Geist-Bold.ttf",
+      "registry/fonts/Geist-Regular.ttf",
+    ]);
   });
 
   it("strips emoji graphemes while keeping Geist-covered symbols intact", () => {
@@ -199,9 +207,9 @@ describe("font loader and caching", () => {
       expect(supported).toEqual(["latin", "cyrillic", "japanese"]);
 
       const fonts = await loadFontsForScripts(["latin", "japanese"]);
-      expect(fonts).toHaveLength(2);
-      expect(fonts[1]?.name).toBe("Noto Sans JP");
-      expect(fonts[1]?.data.byteLength).toBe(5_703_580);
+      expect(fonts).toHaveLength(3);
+      expect(fonts[2]?.name).toBe("Noto Sans JP");
+      expect(fonts[2]?.data.byteLength).toBe(5_703_580);
 
       const japaneseCmap = await getJapaneseFontCmap();
       expect(japaneseCmap).not.toBeNull();

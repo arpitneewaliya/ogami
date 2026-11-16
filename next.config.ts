@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   outputFileTracingIncludes: {
-    "/api/og": ["./registry/fonts/**/*"],
+    "/api/og": ["./registry/fonts/*.ttf", "./registry/fonts/cjk/*.ttf"],
   },
   turbopack: {
     rules: {

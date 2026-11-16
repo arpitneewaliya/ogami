@@ -1,0 +1,8 @@
+{
+  "id": "github-repo",
+  "name": "GitHub Repo",
+  "description": "Repository card with inline repo, star, and fork icons and language indicator.",
+  "author": "Jane Doe",
+  "tags": ["github", "repository", "open-source", "code"],
+  "version": "1.0.0"
+}

@@ -246,6 +246,7 @@ export async function renderFallbackCard(
               style={{
                 display: "flex",
                 fontSize: 64,
+                fontWeight: 700,
                 lineHeight: 1.15,
                 color: "#fafafa",
               }}
