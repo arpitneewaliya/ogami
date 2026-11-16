@@ -40,5 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# docs
-/docs/PROJECT_BRIEF.md
+# opt-in Japanese font pack (multi-MB, not committed)
+/registry/fonts/cjk/*.ttf
+/registry/fonts/cjk/*.otf
+
