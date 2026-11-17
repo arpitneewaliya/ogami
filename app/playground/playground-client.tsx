@@ -427,6 +427,36 @@ export default function PlaygroundClient({
                   );
                 }
 
+                if (field.kind === "select" && field.options) {
+                  return (
+                    <div key={field.name} className="flex flex-col gap-1.5">
+                      <label
+                        htmlFor={`field-${field.name}`}
+                        className="text-xs font-medium text-zinc-300"
+                      >
+                        {field.label}
+                        {field.required ? (
+                          <span className="ml-1 text-rose-400">*</span>
+                        ) : null}
+                      </label>
+                      <select
+                        id={`field-${field.name}`}
+                        value={strVal}
+                        onChange={(e) =>
+                          handleFieldChange(field.name, e.target.value)
+                        }
+                        className="h-9 rounded-md border border-zinc-700 bg-zinc-950 px-3 text-sm text-zinc-100 focus:border-sky-500 focus:outline-none"
+                      >
+                        {field.options.map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  );
+                }
+
                 if (field.kind === "color") {
                   const isValidHex = parseHexColor(strVal) !== null;
                   const pickerValue = isValidHex ? strVal : "#38bdf8";

@@ -26,6 +26,10 @@ const CORE_LIB_FILES = [
     target: "lib/ogami/fonts.ts",
   },
   {
+    sourceRelPath: "registry/lib/format-number.ts",
+    target: "lib/ogami/format-number.ts",
+  },
+  {
     sourceRelPath: "registry/lib/render.tsx",
     target: "lib/ogami/render.tsx",
   },
@@ -95,6 +99,7 @@ function buildSharedDocsFooter(): string {
     "- **Important:** Ogami requires **Zod 4 (`zod@^4.0.0`)**. `@/lib/ogami/define-template` and `@/lib/ogami/render` use Zod v4 internals (`schema.def`, `.maxLength`, and `z.core.$ZodIssue`).",
     "- **Projects on Zod 3:** Installing on an app pinned to `zod@3.x` will fail TypeScript checks and runtime schema inspection unless upgraded to `zod@^4` (`npm install zod@^4`).",
     "- Do **not** add `export const runtime = ...` to `app/api/og/route.tsx` if your app uses Next.js `cacheComponents`.",
+    "- **Number formatting (`format-number`):** Built-in `compact` (`k`/`M`/`B`/`T`, floored to 1 decimal) and `exact` (`1,200`) number formatting are **`en-US` only**.",
     "",
     "### Vercel serverless font tracing (`next.config.ts`)",
     "",

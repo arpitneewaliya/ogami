@@ -1,7 +1,8 @@
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { NextRequest } from "next/server";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { z } from "zod";
 import { assertStringFieldsHaveMaxLength } from "@/registry/lib/define-template";
 import {
   clearFontCache,
@@ -36,13 +37,46 @@ function makeRequest(query: string): NextRequest {
   return new NextRequest(`http://localhost:3000/api/og${query}`);
 }
 
-describe("registered template contract", () => {
-  it("verifies all registered templates have matching meta.json, valid sample data, and length-capped strings", async () => {
-    expect(templateIds).toEqual(["minimal-tech", "github-repo", "blog-post"]);
+const EXPECTED_TEMPLATE_IDS = [
+  "minimal-tech",
+  "github-repo",
+  "blog-post",
+  "repo-launch",
+  "release",
+  "stars-milestone",
+  "npm-downloads-milestone",
+  "docs-page",
+] as const;
 
-    for (const template of allTemplates) {
+describe("registered template contract", () => {
+  it("scans registry/templates/ folders and verifies matching meta.json, valid sample data, length-capped strings, and 1200x630 previews", async () => {
+    expect(templateIds).toEqual([...EXPECTED_TEMPLATE_IDS]);
+
+    const templatesRoot = path.join(process.cwd(), "registry", "templates");
+    const dirEntries = await readdir(templatesRoot, { withFileTypes: true });
+    const folderIds = dirEntries
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name)
+      .sort((a, b) => a.localeCompare(b));
+
+    expect(folderIds).toEqual([...templateIds].sort((a, b) => a.localeCompare(b)));
+
+    for (const folderId of folderIds) {
+      const template = allTemplates.find((entry) => entry.id === folderId);
+      expect(template).toBeDefined();
+      if (!template) continue;
+
+      expect(template.id).toBe(folderId);
+
       expect(() =>
         assertStringFieldsHaveMaxLength(template.id, template.params),
+      ).not.toThrow();
+
+      expect(() =>
+        z.toJSONSchema(template.params, {
+          io: "input",
+          unrepresentable: "any",
+        }),
       ).not.toThrow();
 
       const parsed = template.params.safeParse(template.sample);
@@ -51,14 +85,8 @@ describe("registered template contract", () => {
         expect(findUnsupportedScripts(parsed.data)).toEqual([]);
       }
 
-      const metaPath = path.join(
-        process.cwd(),
-        "registry",
-        "templates",
-        template.id,
-        "meta.json",
-      );
-      const metaRaw = await readFile(metaPath, "utf8");
+      const folderDir = path.join(templatesRoot, folderId);
+      const metaRaw = await readFile(path.join(folderDir, "meta.json"), "utf8");
       const meta = JSON.parse(metaRaw) as {
         id: string;
         name: string;
@@ -68,12 +96,24 @@ describe("registered template contract", () => {
         version: string;
       };
 
-      expect(meta.id).toBe(template.id);
+      expect(meta.id).toBe(folderId);
       expect(meta.name).toBe(template.name);
       expect(meta.description.length).toBeGreaterThan(0);
       expect(meta.author.length).toBeGreaterThan(0);
       expect(Array.isArray(meta.tags) && meta.tags.length > 0).toBe(true);
       expect(meta.version.length).toBeGreaterThan(0);
+
+      // Verify pre-rendered preview exists and is a valid 1200x630 PNG (not byte-exact).
+      const previewBuffer = await readFile(path.join(folderDir, "preview.png"));
+      const previewArrayBuffer = previewBuffer.buffer.slice(
+        previewBuffer.byteOffset,
+        previewBuffer.byteOffset + previewBuffer.byteLength,
+      );
+      expect(parsePngDimensions(previewArrayBuffer)).toEqual({
+        isPng: true,
+        width: 1200,
+        height: 630,
+      });
     }
   });
 });
@@ -133,21 +173,72 @@ describe("GET /api/og", () => {
     ]);
   });
 
-  it("renders max-length and unbroken long titles cleanly across all three templates", async () => {
+  it("renders max-length and unbroken long titles cleanly across all eight templates", async () => {
     const cases = [
-      `?template=minimal-tech&title=${encodeURIComponent("W".repeat(80))}`,
-      `?template=github-repo&name=${encodeURIComponent("a".repeat(60))}`,
-      `?template=blog-post&title=${encodeURIComponent("Design ".repeat(14).trim().slice(0, 100))}&author=Jane+Doe`,
+      `?template=minimal-tech&title=${encodeURIComponent("W".repeat(80))}&subtitle=${encodeURIComponent("Sub ".repeat(35).trim().slice(0, 140))}&tag=${encodeURIComponent("T".repeat(30))}&domain=${encodeURIComponent("example.com")}`,
+      `?template=github-repo&name=${encodeURIComponent("a".repeat(60))}&description=${encodeURIComponent("Repo ".repeat(28).trim().slice(0, 140))}&language=${encodeURIComponent("TypeScript".padEnd(24, "x").slice(0, 24))}&stars=999999999&forks=999999999`,
+      `?template=blog-post&title=${encodeURIComponent("Design ".repeat(14).trim().slice(0, 100))}&author=${encodeURIComponent("Jane Doe ".repeat(6).trim().slice(0, 50))}&date=${encodeURIComponent("Nov 17, 2026")}&readTime=${encodeURIComponent("12 min read")}&category=${encodeURIComponent("Architecture".slice(0, 32))}`,
+      `?template=repo-launch&repo=${encodeURIComponent("acme-org/".padEnd(60, "x"))}&tagline=${encodeURIComponent("Open ".repeat(28).trim().slice(0, 140))}&badge=${encodeURIComponent("B".repeat(24))}&language=TypeScript&license=${encodeURIComponent("Apache-2.0")}&handle=${encodeURIComponent("@" + "h".repeat(39))}`,
+      `?template=release&project=${encodeURIComponent("P".repeat(48))}&version=${encodeURIComponent("v2.4.0-rc.10")}&headline=${encodeURIComponent("Release ".repeat(14).trim().slice(0, 110))}&highlight1=${encodeURIComponent("H1 ".repeat(24).trim().slice(0, 72))}&highlight2=${encodeURIComponent("H2 ".repeat(24).trim().slice(0, 72))}&date=${encodeURIComponent("Nov 17, 2026")}`,
+      `?template=stars-milestone&repo=${encodeURIComponent("o".repeat(60))}&stars=${Number.MAX_SAFE_INTEGER}&format=exact&tagline=${encodeURIComponent("Thank ".repeat(20).trim().slice(0, 120))}&handle=${encodeURIComponent("@" + "u".repeat(39))}`,
+      `?template=npm-downloads-milestone&packageName=${encodeURIComponent("@acme/" + "p".repeat(54))}&downloads=${Number.MAX_SAFE_INTEGER}&format=exact&period=${encodeURIComponent("Last 30 days")}&tagline=${encodeURIComponent("Built ".repeat(20).trim().slice(0, 120))}`,
+      `?template=docs-page&siteName=${encodeURIComponent("S".repeat(40))}&section=${encodeURIComponent("Guides / " + "x".repeat(47))}&title=${encodeURIComponent("Docs ".repeat(18).trim().slice(0, 90))}&summary=${encodeURIComponent("Info ".repeat(32).trim().slice(0, 160))}`,
     ];
+
+    expect(cases).toHaveLength(allTemplates.length);
 
     for (const query of cases) {
       const response = await GET(makeRequest(query));
       expect(response.status).toBe(200);
+      expect(response.headers.get("content-type")).toBe("image/png");
+      expect(response.headers.get("x-ogami-fallback")).toBeNull();
       expect(parsePngDimensions(await response.arrayBuffer())).toEqual({
         isPng: true,
         width: 1200,
         height: 630,
       });
+    }
+  });
+
+  it("validates milestone numeric query params (accepts 0 through MAX_SAFE_INTEGER; rejects NaN, Infinity, negative, decimal, overflow)", async () => {
+    for (const valid of [
+      0,
+      999,
+      1_000,
+      1_999,
+      999_999,
+      1_000_000,
+      Number.MAX_SAFE_INTEGER,
+    ]) {
+      const res = await GET(
+        makeRequest(
+          `?template=stars-milestone&repo=acme%2Fogami&stars=${valid}&format=compact`,
+        ),
+      );
+      expect(res.status).toBe(200);
+      expect(parsePngDimensions(await res.arrayBuffer())).toEqual({
+        isPng: true,
+        width: 1200,
+        height: 630,
+      });
+    }
+
+    for (const bad of [
+      "NaN",
+      "Infinity",
+      "-Infinity",
+      "-1",
+      "1.5",
+      "1.0",
+      "9007199254740992",
+    ]) {
+      const res = await GET(
+        makeRequest(
+          `?template=npm-downloads-milestone&packageName=%40acme%2Fpkg&downloads=${encodeURIComponent(bad)}`,
+        ),
+      );
+      expect(res.status).toBe(400);
+      expect(res.headers.get("cache-control")).toBe("no-store");
     }
   });
 
@@ -244,11 +335,7 @@ describe("GET /api/og", () => {
       availableTemplates: string[];
     };
     expect(json.error).toContain("Missing required query parameter");
-    expect(json.availableTemplates).toEqual([
-      "minimal-tech",
-      "github-repo",
-      "blog-post",
-    ]);
+    expect(json.availableTemplates).toEqual([...EXPECTED_TEMPLATE_IDS]);
   });
 
   it("returns 404 JSON listing available templates when template is unknown", async () => {
@@ -262,11 +349,7 @@ describe("GET /api/og", () => {
       availableTemplates: string[];
     };
     expect(json.error).toContain('Unknown template "nonexistent"');
-    expect(json.availableTemplates).toEqual([
-      "minimal-tech",
-      "github-repo",
-      "blog-post",
-    ]);
+    expect(json.availableTemplates).toEqual([...EXPECTED_TEMPLATE_IDS]);
   });
 
   it("returns 400 JSON with field details when params fail Zod validation", async () => {

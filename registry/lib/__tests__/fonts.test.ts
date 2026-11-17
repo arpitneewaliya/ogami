@@ -33,8 +33,8 @@ describe("Geist-Regular.ttf cmap verification", () => {
     );
     const realCmap = parseTtfCmapCodepoints(arrayBuffer);
 
-    expect(buffer.byteLength).toBe(125_956);
-    expect(realCmap.size).toBe(726);
+    expect(buffer.byteLength).toBe(126_048);
+    expect(realCmap.size).toBe(728);
 
     for (let cp = 0; cp <= 0xffff; cp++) {
       expect(isCodepointInGeist(cp)).toBe(realCmap.has(cp));
@@ -65,6 +65,17 @@ describe("script detection", () => {
     const text = "v1.0 • $100 → €90 / ₹500 • №1 © ® ™ ☺ ☹ (100%)";
     expect(detectScripts(text)).toEqual(["latin"]);
     expect(findUnsupportedScripts({ text })).toEqual([]);
+  });
+
+  it("treats U+2126 (Ohm sign) as a Geist-covered neutral symbol, while keeping U+03A9 (Greek Omega) as Greek", () => {
+    const ohmText = "4.7 k\u2126 resistor";
+    expect(detectScripts(ohmText)).toEqual(["latin"]);
+    expect(findUnsupportedScripts({ text: ohmText })).toEqual([]);
+
+    expect(detectScripts("Greek \u03a9")).toEqual(["latin", "greek"]);
+    expect(findUnsupportedScripts({ text: "Greek \u03a9" }).map((i) => i.script)).toEqual([
+      "greek",
+    ]);
   });
 
   it("flags uncovered Latin Extended-B, Cyrillic Supplement, and Greek characters", () => {
@@ -167,11 +178,11 @@ describe("font loader and caching", () => {
     expect(first[0]?.name).toBe("Geist");
     expect(first[0]?.weight).toBe(400);
     expect(first[0]?.style).toBe("normal");
-    expect(first[0]?.data.byteLength).toBe(125_956);
+    expect(first[0]?.data.byteLength).toBe(126_048);
     expect(first[1]?.name).toBe("Geist");
     expect(first[1]?.weight).toBe(700);
     expect(first[1]?.style).toBe("normal");
-    expect(first[1]?.data.byteLength).toBe(72_960);
+    expect(first[1]?.data.byteLength).toBe(128_868);
     expect(second[0]?.data).toBe(first[0]?.data);
     expect(second[1]?.data).toBe(first[1]?.data);
     expect(getCachedFontPaths().sort()).toEqual([

@@ -21,6 +21,7 @@ describe("playground JSON Schema form generator", () => {
           default: "#38bdf8",
         },
         stars: { type: "integer", minimum: 0, maximum: 999 },
+        format: { type: "string", enum: ["compact", "exact"], default: "compact" },
         published: { type: "boolean", default: false },
         tags: { type: "array" },
       },
@@ -30,6 +31,7 @@ describe("playground JSON Schema form generator", () => {
       ["title", "text", 80],
       ["accentColor", "color", 7],
       ["stars", "number", undefined],
+      ["format", "select", undefined],
       ["published", "boolean", undefined],
       ["tags", "fallback", undefined],
     ]);

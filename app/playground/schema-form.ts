@@ -1,5 +1,6 @@
 export interface JsonSchemaProperty {
   type?: string | string[];
+  enum?: unknown[];
   minLength?: number;
   maxLength?: number;
   minimum?: number;
@@ -17,6 +18,7 @@ export interface JsonSchemaObject {
 
 export type PlaygroundFieldKind =
   | "text"
+  | "select"
   | "color"
   | "number"
   | "boolean"
@@ -28,6 +30,7 @@ export interface PlaygroundFieldDescriptor {
   kind: PlaygroundFieldKind;
   required: boolean;
   isInteger: boolean;
+  options?: string[];
   minLength?: number;
   maxLength?: number;
   minimum?: number;
@@ -76,6 +79,23 @@ export function extractPlaygroundFields(
     const required = requiredSet.has(name);
 
     if (primaryType === "string") {
+      const enumOptions = Array.isArray(prop.enum)
+        ? prop.enum.filter((v): v is string => typeof v === "string")
+        : [];
+      if (enumOptions.length > 0) {
+        fields.push({
+          name,
+          label,
+          kind: "select",
+          required,
+          isInteger: false,
+          options: enumOptions,
+          defaultValue:
+            typeof prop.default === "string" ? prop.default : enumOptions[0],
+        });
+        continue;
+      }
+
       const isColor = isHexColorPattern(prop.pattern);
       fields.push({
         name,

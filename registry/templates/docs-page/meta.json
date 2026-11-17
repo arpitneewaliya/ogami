@@ -1,0 +1,29 @@
+{
+  "id": "docs-page",
+  "name": "Docs Page",
+  "description": "Crisp light-mode documentation card with section breadcrumb, page title, and summary.",
+  "author": "Jane Doe",
+  "tags": ["docs", "documentation", "reference", "light"],
+  "version": "1.0.0",
+  "colors": [
+    {
+      "label": "Page title on card",
+      "foreground": "#0f172a",
+      "background": "#ffffff",
+      "largeText": true
+    },
+    {
+      "label": "Summary on card",
+      "foreground": "#475569",
+      "background": "#ffffff",
+      "largeText": false
+    },
+    {
+      "label": "Accent label & breadcrumb",
+      "foreground": "#0369a1",
+      "background": "#ffffff",
+      "largeText": false,
+      "foregroundParam": "accentColor"
+    }
+  ]
+}

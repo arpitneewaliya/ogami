@@ -1,0 +1,35 @@
+{
+  "id": "npm-downloads-milestone",
+  "name": "npm Downloads Milestone",
+  "description": "Package download milestone card with compact or exact counter and original cube icon.",
+  "author": "Jane Doe",
+  "tags": ["milestone", "npm", "downloads", "package"],
+  "version": "1.0.0",
+  "colors": [
+    {
+      "label": "Hero download count on card",
+      "foreground": "#fb7185",
+      "background": "#1b1216",
+      "largeText": true,
+      "foregroundParam": "accentColor"
+    },
+    {
+      "label": "Package name on card",
+      "foreground": "#fff1f2",
+      "background": "#1b1216",
+      "largeText": true
+    },
+    {
+      "label": "Tagline on card",
+      "foreground": "#d4d4d8",
+      "background": "#1b1216",
+      "largeText": false
+    },
+    {
+      "label": "Badge label on pill",
+      "foreground": "#ffe4e6",
+      "background": "#311722",
+      "largeText": false
+    }
+  ]
+}

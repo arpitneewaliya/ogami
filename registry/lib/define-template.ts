@@ -178,9 +178,16 @@ export function coerceSearchParams(
     const fieldType = unwrapped?.def?.type;
 
     if (fieldType === "number") {
-      if (raw.trim() !== "") {
-        const numeric = Number(raw);
-        result[key] = Number.isFinite(numeric) ? numeric : raw;
+      const trimmed = raw.trim();
+      if (trimmed !== "") {
+        const numeric = Number(trimmed);
+        // Reject explicit decimal strings like "1.0" as well as non-finite inputs
+        // by leaving them uncoerced for Zod to report as invalid parameters.
+        const isDecimalSyntax = trimmed.includes(".");
+        const allowNumeric =
+          Number.isFinite(numeric) &&
+          (!isDecimalSyntax || !Number.isInteger(numeric));
+        result[key] = allowNumeric ? numeric : raw;
       } else {
         result[key] = raw;
       }

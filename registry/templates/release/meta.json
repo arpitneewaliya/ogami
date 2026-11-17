@@ -1,0 +1,36 @@
+{
+  "id": "release",
+  "name": "Release",
+  "description": "Version announcement card with semver pill, release headline, and key highlights.",
+  "author": "Jane Doe",
+  "tags": ["milestone", "release", "changelog", "semver"],
+  "version": "1.0.0",
+  "colors": [
+    {
+      "label": "Headline on card",
+      "foreground": "#f8fafc",
+      "background": "#121426",
+      "largeText": true
+    },
+    {
+      "label": "Highlight item on card",
+      "foreground": "#c7d2fe",
+      "background": "#121426",
+      "largeText": false
+    },
+    {
+      "label": "Version text on pill",
+      "foreground": "#0a0b14",
+      "background": "#818cf8",
+      "largeText": true,
+      "backgroundParam": "accentColor"
+    },
+    {
+      "label": "Footer label on card",
+      "foreground": "#818cf8",
+      "background": "#121426",
+      "largeText": false,
+      "foregroundParam": "accentColor"
+    }
+  ]
+}

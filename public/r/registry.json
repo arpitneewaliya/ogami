@@ -29,6 +29,11 @@
           "target": "lib/ogami/fonts.ts"
         },
         {
+          "path": "registry/lib/format-number.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/format-number.ts"
+        },
+        {
           "path": "registry/lib/render.tsx",
           "type": "registry:file",
           "target": "lib/ogami/render.tsx"
@@ -79,6 +84,68 @@
           "path": "registry/lib/fonts.ts",
           "type": "registry:file",
           "target": "lib/ogami/fonts.ts"
+        },
+        {
+          "path": "registry/lib/format-number.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/format-number.ts"
+        },
+        {
+          "path": "registry/lib/render.tsx",
+          "type": "registry:file",
+          "target": "lib/ogami/render.tsx"
+        },
+        {
+          "path": "registry/lib/scripts.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/scripts.ts"
+        }
+      ]
+    },
+    {
+      "name": "docs-page",
+      "type": "registry:item",
+      "title": "Docs Page",
+      "description": "Crisp light-mode documentation card with section breadcrumb, page title, and summary.",
+      "author": "Jane Doe",
+      "dependencies": [
+        "zod@^4.0.0",
+        "geist@^1.9.2"
+      ],
+      "categories": [
+        "docs",
+        "documentation",
+        "reference",
+        "light"
+      ],
+      "meta": {
+        "version": "1.0.0"
+      },
+      "files": [
+        {
+          "path": "registry/templates/docs-page/template.tsx",
+          "type": "registry:file",
+          "target": "components/ogami/docs-page.tsx"
+        },
+        {
+          "path": "registry/lib/auto-fit.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/auto-fit.ts"
+        },
+        {
+          "path": "registry/lib/define-template.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/define-template.ts"
+        },
+        {
+          "path": "registry/lib/fonts.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/fonts.ts"
+        },
+        {
+          "path": "registry/lib/format-number.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/format-number.ts"
         },
         {
           "path": "registry/lib/render.tsx",
@@ -133,6 +200,11 @@
           "target": "lib/ogami/fonts.ts"
         },
         {
+          "path": "registry/lib/format-number.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/format-number.ts"
+        },
+        {
           "path": "registry/lib/render.tsx",
           "type": "registry:file",
           "target": "lib/ogami/render.tsx"
@@ -183,6 +255,239 @@
           "path": "registry/lib/fonts.ts",
           "type": "registry:file",
           "target": "lib/ogami/fonts.ts"
+        },
+        {
+          "path": "registry/lib/format-number.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/format-number.ts"
+        },
+        {
+          "path": "registry/lib/render.tsx",
+          "type": "registry:file",
+          "target": "lib/ogami/render.tsx"
+        },
+        {
+          "path": "registry/lib/scripts.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/scripts.ts"
+        }
+      ]
+    },
+    {
+      "name": "npm-downloads-milestone",
+      "type": "registry:item",
+      "title": "npm Downloads Milestone",
+      "description": "Package download milestone card with compact or exact counter and original cube icon.",
+      "author": "Jane Doe",
+      "dependencies": [
+        "zod@^4.0.0",
+        "geist@^1.9.2"
+      ],
+      "categories": [
+        "milestone",
+        "npm",
+        "downloads",
+        "package"
+      ],
+      "meta": {
+        "version": "1.0.0"
+      },
+      "files": [
+        {
+          "path": "registry/templates/npm-downloads-milestone/template.tsx",
+          "type": "registry:file",
+          "target": "components/ogami/npm-downloads-milestone.tsx"
+        },
+        {
+          "path": "registry/lib/auto-fit.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/auto-fit.ts"
+        },
+        {
+          "path": "registry/lib/define-template.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/define-template.ts"
+        },
+        {
+          "path": "registry/lib/fonts.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/fonts.ts"
+        },
+        {
+          "path": "registry/lib/format-number.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/format-number.ts"
+        },
+        {
+          "path": "registry/lib/render.tsx",
+          "type": "registry:file",
+          "target": "lib/ogami/render.tsx"
+        },
+        {
+          "path": "registry/lib/scripts.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/scripts.ts"
+        }
+      ]
+    },
+    {
+      "name": "release",
+      "type": "registry:item",
+      "title": "Release",
+      "description": "Version announcement card with semver pill, release headline, and key highlights.",
+      "author": "Jane Doe",
+      "dependencies": [
+        "zod@^4.0.0",
+        "geist@^1.9.2"
+      ],
+      "categories": [
+        "milestone",
+        "release",
+        "changelog",
+        "semver"
+      ],
+      "meta": {
+        "version": "1.0.0"
+      },
+      "files": [
+        {
+          "path": "registry/templates/release/template.tsx",
+          "type": "registry:file",
+          "target": "components/ogami/release.tsx"
+        },
+        {
+          "path": "registry/lib/auto-fit.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/auto-fit.ts"
+        },
+        {
+          "path": "registry/lib/define-template.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/define-template.ts"
+        },
+        {
+          "path": "registry/lib/fonts.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/fonts.ts"
+        },
+        {
+          "path": "registry/lib/format-number.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/format-number.ts"
+        },
+        {
+          "path": "registry/lib/render.tsx",
+          "type": "registry:file",
+          "target": "lib/ogami/render.tsx"
+        },
+        {
+          "path": "registry/lib/scripts.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/scripts.ts"
+        }
+      ]
+    },
+    {
+      "name": "repo-launch",
+      "type": "registry:item",
+      "title": "Repo Launch",
+      "description": "Open-source repository launch card with stack badge, license pill, and tagline.",
+      "author": "Jane Doe",
+      "dependencies": [
+        "zod@^4.0.0",
+        "geist@^1.9.2"
+      ],
+      "categories": [
+        "milestone",
+        "launch",
+        "open-source",
+        "repo"
+      ],
+      "meta": {
+        "version": "1.0.0"
+      },
+      "files": [
+        {
+          "path": "registry/templates/repo-launch/template.tsx",
+          "type": "registry:file",
+          "target": "components/ogami/repo-launch.tsx"
+        },
+        {
+          "path": "registry/lib/auto-fit.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/auto-fit.ts"
+        },
+        {
+          "path": "registry/lib/define-template.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/define-template.ts"
+        },
+        {
+          "path": "registry/lib/fonts.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/fonts.ts"
+        },
+        {
+          "path": "registry/lib/format-number.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/format-number.ts"
+        },
+        {
+          "path": "registry/lib/render.tsx",
+          "type": "registry:file",
+          "target": "lib/ogami/render.tsx"
+        },
+        {
+          "path": "registry/lib/scripts.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/scripts.ts"
+        }
+      ]
+    },
+    {
+      "name": "stars-milestone",
+      "type": "registry:item",
+      "title": "Stars Milestone",
+      "description": "Repository star milestone card with compact or exact formatting and geometric star badge.",
+      "author": "Jane Doe",
+      "dependencies": [
+        "zod@^4.0.0",
+        "geist@^1.9.2"
+      ],
+      "categories": [
+        "milestone",
+        "stars",
+        "github",
+        "celebration"
+      ],
+      "meta": {
+        "version": "1.0.0"
+      },
+      "files": [
+        {
+          "path": "registry/templates/stars-milestone/template.tsx",
+          "type": "registry:file",
+          "target": "components/ogami/stars-milestone.tsx"
+        },
+        {
+          "path": "registry/lib/auto-fit.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/auto-fit.ts"
+        },
+        {
+          "path": "registry/lib/define-template.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/define-template.ts"
+        },
+        {
+          "path": "registry/lib/fonts.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/fonts.ts"
+        },
+        {
+          "path": "registry/lib/format-number.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/format-number.ts"
         },
         {
           "path": "registry/lib/render.tsx",

@@ -1,0 +1,35 @@
+{
+  "id": "repo-launch",
+  "name": "Repo Launch",
+  "description": "Open-source repository launch card with stack badge, license pill, and tagline.",
+  "author": "Jane Doe",
+  "tags": ["milestone", "launch", "open-source", "repo"],
+  "version": "1.0.0",
+  "colors": [
+    {
+      "label": "Repo title on card",
+      "foreground": "#f8fafc",
+      "background": "#0c1a16",
+      "largeText": true
+    },
+    {
+      "label": "Tagline on card",
+      "foreground": "#cbd5e1",
+      "background": "#0c1a16",
+      "largeText": false
+    },
+    {
+      "label": "Badge text on pill",
+      "foreground": "#ecfdf5",
+      "background": "#064e3b",
+      "largeText": false
+    },
+    {
+      "label": "Accent text & dot on card",
+      "foreground": "#10b981",
+      "background": "#0c1a16",
+      "largeText": true,
+      "foregroundParam": "accentColor"
+    }
+  ]
+}

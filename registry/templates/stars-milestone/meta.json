@@ -1,0 +1,35 @@
+{
+  "id": "stars-milestone",
+  "name": "Stars Milestone",
+  "description": "Repository star milestone card with compact or exact formatting and geometric star badge.",
+  "author": "Jane Doe",
+  "tags": ["milestone", "stars", "github", "celebration"],
+  "version": "1.0.0",
+  "colors": [
+    {
+      "label": "Hero star count on card",
+      "foreground": "#fbbf24",
+      "background": "#181410",
+      "largeText": true,
+      "foregroundParam": "accentColor"
+    },
+    {
+      "label": "Repo name on card",
+      "foreground": "#fafaf9",
+      "background": "#181410",
+      "largeText": true
+    },
+    {
+      "label": "Tagline on card",
+      "foreground": "#d6d3d1",
+      "background": "#181410",
+      "largeText": false
+    },
+    {
+      "label": "Badge label on pill",
+      "foreground": "#fef3c7",
+      "background": "#2b2112",
+      "largeText": false
+    }
+  ]
+}
