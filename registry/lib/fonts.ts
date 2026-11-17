@@ -571,7 +571,7 @@ function describeUnsupportedScript(
     case "japanese":
       return options?.japanesePackInstalled
         ? "Japanese font pack is unavailable."
-        : "Japanese requires the opt-in NotoSansJP font pack in registry/fonts/cjk/NotoSansJP-Regular.ttf.";
+        : "Japanese requires the opt-in NotoSansJP font pack (registry/fonts/cjk/NotoSansJP-Regular.ttf or ogami/fonts/cjk/NotoSansJP-Regular.ttf).";
     case "latin-extended":
       return "Character is outside the default Geist-Regular.ttf Latin glyph set.";
     case "cyrillic-extended":
@@ -789,39 +789,202 @@ export function findUnsupportedScripts(
   return issues;
 }
 
-function readFontBuffer(
-  fontFile:
-    | "Geist-Regular.ttf"
-    | "Geist-Bold.ttf"
-    | "cjk/NotoSansJP-Regular.ttf",
-): Promise<Buffer> {
+type KnownFontFile =
+  | "Geist-Regular.ttf"
+  | "Geist-Bold.ttf"
+  | "cjk/NotoSansJP-Regular.ttf";
+
+async function ignoreMissing(promise: Promise<Buffer>): Promise<Buffer | null> {
+  try {
+    return await promise;
+  } catch {
+    return null;
+  }
+}
+
+async function ignoreMissingAccess(promise: Promise<void>): Promise<boolean> {
+  try {
+    await promise;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function readCustomFontsDirFont(
+  fontFile: KnownFontFile,
+): Promise<Buffer | null> {
+  const customDir = process.env.OGAMI_FONTS_DIR?.trim();
+  if (!customDir) return null;
+
   if (fontFile === "Geist-Regular.ttf") {
-    return readFile(
-      path.join(process.cwd(), "registry", "fonts", "Geist-Regular.ttf"),
+    return ignoreMissing(
+      readFile(/*turbopackIgnore: true*/ path.join(customDir, "Geist-Regular.ttf")),
     );
   }
   if (fontFile === "Geist-Bold.ttf") {
-    return readFile(
-      path.join(process.cwd(), "registry", "fonts", "Geist-Bold.ttf"),
+    return ignoreMissing(
+      readFile(/*turbopackIgnore: true*/ path.join(customDir, "Geist-Bold.ttf")),
     );
   }
-  return readFile(
-    path.join(
-      process.cwd(),
-      "registry",
-      "fonts",
-      "cjk",
-      "NotoSansJP-Regular.ttf",
+  return ignoreMissing(
+    readFile(
+      /*turbopackIgnore: true*/ path.join(
+        customDir,
+        "cjk",
+        "NotoSansJP-Regular.ttf",
+      ),
     ),
+  );
+}
+
+async function readFontBuffer(fontFile: KnownFontFile): Promise<Buffer> {
+  const customBuffer = await readCustomFontsDirFont(fontFile);
+  if (customBuffer) return customBuffer;
+
+  if (fontFile === "Geist-Regular.ttf") {
+    const buffer =
+      (await ignoreMissing(
+        readFile(
+          path.join(process.cwd(), "registry", "fonts", "Geist-Regular.ttf"),
+        ),
+      )) ??
+      (await ignoreMissing(
+        readFile(
+          path.join(process.cwd(), "ogami", "fonts", "Geist-Regular.ttf"),
+        ),
+      )) ??
+      (await ignoreMissing(
+        readFile(
+          path.join(
+            process.cwd(),
+            "node_modules",
+            "geist",
+            "dist",
+            "fonts",
+            "geist-sans",
+            "Geist-Regular.ttf",
+          ),
+        ),
+      )) ??
+      (await ignoreMissing(
+        readFile(
+          /*turbopackIgnore: true*/ path.join(
+            process.cwd(),
+            "..",
+            "node_modules",
+            "geist",
+            "dist",
+            "fonts",
+            "geist-sans",
+            "Geist-Regular.ttf",
+          ),
+        ),
+      )) ??
+      (await ignoreMissing(
+        readFile(
+          /*turbopackIgnore: true*/ path.join(
+            process.cwd(),
+            "..",
+            "..",
+            "node_modules",
+            "geist",
+            "dist",
+            "fonts",
+            "geist-sans",
+            "Geist-Regular.ttf",
+          ),
+        ),
+      ));
+    if (buffer) return buffer;
+  } else if (fontFile === "Geist-Bold.ttf") {
+    const buffer =
+      (await ignoreMissing(
+        readFile(
+          path.join(process.cwd(), "registry", "fonts", "Geist-Bold.ttf"),
+        ),
+      )) ??
+      (await ignoreMissing(
+        readFile(path.join(process.cwd(), "ogami", "fonts", "Geist-Bold.ttf")),
+      )) ??
+      (await ignoreMissing(
+        readFile(
+          path.join(
+            process.cwd(),
+            "node_modules",
+            "geist",
+            "dist",
+            "fonts",
+            "geist-sans",
+            "Geist-Bold.ttf",
+          ),
+        ),
+      )) ??
+      (await ignoreMissing(
+        readFile(
+          /*turbopackIgnore: true*/ path.join(
+            process.cwd(),
+            "..",
+            "node_modules",
+            "geist",
+            "dist",
+            "fonts",
+            "geist-sans",
+            "Geist-Bold.ttf",
+          ),
+        ),
+      )) ??
+      (await ignoreMissing(
+        readFile(
+          /*turbopackIgnore: true*/ path.join(
+            process.cwd(),
+            "..",
+            "..",
+            "node_modules",
+            "geist",
+            "dist",
+            "fonts",
+            "geist-sans",
+            "Geist-Bold.ttf",
+          ),
+        ),
+      ));
+    if (buffer) return buffer;
+  } else {
+    const buffer =
+      (await ignoreMissing(
+        readFile(
+          path.join(
+            process.cwd(),
+            "registry",
+            "fonts",
+            "cjk",
+            "NotoSansJP-Regular.ttf",
+          ),
+        ),
+      )) ??
+      (await ignoreMissing(
+        readFile(
+          path.join(
+            process.cwd(),
+            "ogami",
+            "fonts",
+            "cjk",
+            "NotoSansJP-Regular.ttf",
+          ),
+        ),
+      ));
+    if (buffer) return buffer;
+  }
+
+  throw new Error(
+    `Could not find font "${fontFile}". Install the "geist" npm package, place fonts in ogami/fonts/, or set OGAMI_FONTS_DIR.`,
   );
 }
 
 async function readFontEntry(
   cacheKey: string,
-  fontFile:
-    | "Geist-Regular.ttf"
-    | "Geist-Bold.ttf"
-    | "cjk/NotoSansJP-Regular.ttf",
+  fontFile: KnownFontFile,
 ): Promise<CachedFontEntry> {
   const cached = fontCache.get(cacheKey);
   if (cached) {
@@ -855,20 +1018,47 @@ export async function hasJapaneseFontPack(): Promise<boolean> {
       return false;
     }
   }
-  try {
-    await access(
+  const customDir = process.env.OGAMI_FONTS_DIR?.trim();
+  if (
+    customDir &&
+    (await ignoreMissingAccess(
+      access(
+        /*turbopackIgnore: true*/ path.join(
+          customDir,
+          "cjk",
+          "NotoSansJP-Regular.ttf",
+        ),
+      ),
+    ))
+  ) {
+    return true;
+  }
+  if (
+    await ignoreMissingAccess(
+      access(
+        path.join(
+          process.cwd(),
+          "registry",
+          "fonts",
+          "cjk",
+          "NotoSansJP-Regular.ttf",
+        ),
+      ),
+    )
+  ) {
+    return true;
+  }
+  return ignoreMissingAccess(
+    access(
       path.join(
         process.cwd(),
-        "registry",
+        "ogami",
         "fonts",
         "cjk",
         "NotoSansJP-Regular.ttf",
       ),
-    );
-    return true;
-  } catch {
-    return false;
-  }
+    ),
+  );
 }
 
 export async function getSupportedScripts(): Promise<SupportedScript[]> {
