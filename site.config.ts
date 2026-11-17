@@ -3,7 +3,7 @@
  * `scripts/build-registry.ts` always reads `DEFAULT_SITE_URL` directly so `public/r/`
  * remains deterministic across machines and CI.
  */
-export const DEFAULT_SITE_URL = "https://ogami.example.com";
+export const DEFAULT_SITE_URL = "https://ogami-toolkit.vercel.app";
 
 export interface SiteUrlConfig {
   url: string;
