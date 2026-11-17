@@ -1,6 +1,7 @@
 import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { DEFAULT_SITE_URL } from "../site.config";
 
 export const REGISTRY_ITEM_SCHEMA_URL =
   "https://ui.shadcn.com/schema/registry-item.json";
@@ -318,7 +319,7 @@ export async function buildRegistryPayloads(
   const catalog: RegistryCatalogPayload = {
     $schema: REGISTRY_CATALOG_SCHEMA_URL,
     name: "ogami",
-    homepage: "http://localhost:3000",
+    homepage: DEFAULT_SITE_URL,
     items: allItems.map((item) => ({
       name: item.name,
       type: item.type,
@@ -368,6 +369,16 @@ const isCliEntry =
   path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 
 if (isCliEntry) {
-  const written = await writeRegistry();
-  console.log(`Generated ${written.length} registry files in public/r/: ${written.join(", ")}`);
+  writeRegistry()
+    .then((written) => {
+      console.log(
+        `Generated ${written.length} registry files in public/r/: ${written.join(", ")}`,
+      );
+    })
+    .catch((error: unknown) => {
+      const message =
+        error instanceof Error ? error.stack ?? error.message : String(error);
+      console.error(message);
+      process.exit(1);
+    });
 }

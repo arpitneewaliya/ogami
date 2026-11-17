@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "ogami",
-  "homepage": "http://localhost:3000",
+  "homepage": "https://ogami.example.com",
   "items": [
     {
       "name": "core",

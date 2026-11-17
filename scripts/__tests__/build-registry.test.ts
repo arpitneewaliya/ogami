@@ -1,6 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { DEFAULT_SITE_URL } from "../../site.config";
 import {
   buildRegistryPayloads,
   REGISTRY_DEPENDENCIES,
@@ -39,6 +40,7 @@ describe("registry build freshness and contracts", () => {
     ) as RegistryCatalogPayload;
 
     expect(catalog.name).toBe("ogami");
+    expect(catalog.homepage).toBe(DEFAULT_SITE_URL);
     const expectedTemplates = [
       "blog-post",
       "docs-page",
