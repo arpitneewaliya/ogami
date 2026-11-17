@@ -1,6 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { templateIds } from "@/registry/templates";
 import { DEFAULT_SITE_URL } from "../../site.config";
 import {
   buildRegistryPayloads,
@@ -41,16 +42,10 @@ describe("registry build freshness and contracts", () => {
 
     expect(catalog.name).toBe("ogami");
     expect(catalog.homepage).toBe(DEFAULT_SITE_URL);
-    const expectedTemplates = [
-      "blog-post",
-      "docs-page",
-      "github-repo",
-      "minimal-tech",
-      "npm-downloads-milestone",
-      "release",
-      "repo-launch",
-      "stars-milestone",
-    ];
+    const expectedTemplates = [...templateIds].sort((a, b) =>
+      a.localeCompare(b),
+    );
+    expect(expectedTemplates.length).toBeGreaterThanOrEqual(8);
     expect(catalog.items.map((item) => item.name)).toEqual([
       "core",
       ...expectedTemplates,

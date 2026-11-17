@@ -51,3 +51,27 @@ Short log of key technical decisions made in Phases 0 and 1 (per `docs/PROJECT_B
   - `shadcn@4.23.0` (`@shadcn/registry@0.2.1`) writes all registry `files[]` as UTF-8 strings (`registry:font` only configures Google Fonts CSS metadata), so `.ttf` binaries cannot be shipped inside registry JSON. Shipping `geist@^1.9.2` in `dependencies` provides `Geist-Regular.ttf` and `Geist-Bold.ttf` (SIL OFL 1.1) on disk in `node_modules/geist/dist/fonts/geist-sans/` with one install command, while `NotoSansJP-Regular.ttf` remains opt-in under `ogami/fonts/cjk/`.
   - `registry:block` / `registry:lib` triggers `shadcn init` on fresh `create-next-app` apps without `components.json`, prompting interactively and rewriting `app/globals.css` + adding Tailwind/UI dependencies (`@base-ui/react`, `tw-animate-css`, `cn`, `lucide-react`, `shadcn`). Switching to `registry:item` + `registry:file` installs with zero prompts and touches no CSS, `components.json`, or UI packages.
 - **Known `src/` and alias limitations:** Because targets omit `~/`, `shadcn` automatically places files under `src/` when a `src/` directory exists (`components/ogami/<id>.tsx` → `src/components/ogami/<id>.tsx`), and because `registry:file` skips `transformImport`, `@/lib/ogami/*` works out of the box when the consumer's `tsconfig.json` maps `@/*` to `./*` (root) or `./src/*` (`--src-dir` default). Projects using a non-`@/*` import alias (such as `~/*` or `#...`), or having an unrelated `src/` folder while `app/` is at root, must adjust imports or `tsconfig.json` paths manually. Projects pinned to `zod@3.x` must upgrade to `zod@^4` because `define-template.ts` and `render.tsx` use Zod v4 APIs (`schema.def`, `.maxLength`, `z.core.$ZodIssue`).
+
+## 2026-11-17 — ESLint only (no Prettier)
+
+- **Decision:** Keep ESLint (`eslint-config-next` via `npm run lint`) as the sole lint/style check and do **not** install or configure Prettier, even though `docs/PROJECT_BRIEF.md` Section 6 listed `ESLint + Prettier`.
+- **Rationale:** The repository already uses `eslint` (`^9`) cleanly across all files without formatting conflicts; adding Prettier would introduce an extra dev dependency and touch unrelated files with formatting sweeps without practical benefit in v1.
+
+## 2026-11-17 — `geist@1.9.2` font sync, shared `en-US` number formatter, and non-byte-identical preview checks
+
+- **Decision:** Sync `registry/fonts/Geist-{Regular,Bold}.ttf` to npm `geist@1.9.2` (`126,048` B / `128,868` B, `728` cmap glyphs, recorded in `registry/fonts/SOURCE.md`), run `scripts/generate-previews.ts` via `tsx` (`devDependency` only), add `registry/lib/format-number.ts` (`en-US` `"compact"` default / `"exact"` toggle with safe non-negative integer Zod bounds), and assert PNG signature + `1200x630` dimensions (not byte equality) in tests/CI.
+- **Rationale:** Matches the exact font binary `geist@^1.9.2` installs in user apps, enforces `>= 0` safe integer validation (`NaN`/`Infinity`/decimals/`> MAX_SAFE_INTEGER` return 400), keeps hero milestone counters readable (`999,999` → `999.9k`, never `1000k`), and avoids cross-OS Resvg/Satori rasterization diffs failing Linux CI. (`github-repo` retains its plain `en-US` `Intl.NumberFormat` digit grouping.)
+
+## 2026-11-17 — Gallery static previews, `marked` JSX renderer, `site.config.ts`, and `cacheComponents` `notFound()` behavior
+
+- **Decision:**
+  - Serve gallery and detail previews via explicit static PNG imports (`app/_lib/template-previews.ts`) rather than copying to `public/` or calling `/api/og`.
+  - Render docs Markdown with pinned `marked@18.2.1` via a token-to-JSX renderer (`app/_lib/markdown.tsx`) that drops raw HTML tokens and allows only `http:`, `https:`, `mailto:`, and safe relative links.
+  - Centralize the site URL in `site.config.ts` (`DEFAULT_SITE_URL = "https://ogami.example.com"`, overridable via `NEXT_PUBLIC_SITE_URL` for site pages), while `scripts/build-registry.ts` uses only `DEFAULT_SITE_URL` so `public/r/` is deterministic across machines/CI.
+  - Use `generateStaticParams()` + `notFound()` without `export const dynamicParams = false` on `/templates/[id]` and `/docs/[slug]`.
+- **Observed `cacheComponents` + `partialPrefetching` behavior (Phase 4b):** Next.js `16.4.6` forbids `dynamicParams = false` when `cacheComponents: true` is enabled. Every generated template/doc path prerenders as full static HTML (`○ (Static)`, `x-nextjs-cache: HIT`), while unknown `/templates/<id>` and `/docs/<slug>` requests serve the prerendered App Shell with HTTP `200` and stream Next's 404 UI plus `<meta name="robots" content="noindex" />`.
+
+## 2026-11-17 — GitHub Actions CI, Node LTS pinning, and LF line-ending normalization
+
+- **Decision:** Pin Active LTS Node `26` in `.nvmrc` for the main `.github/workflows/ci.yml` job (`lint`, `npx tsc --noEmit`, `build`, `test`, `registry:build` + `git status --porcelain public/r/` emptiness check) and add a compatibility `node-22` job (`npm ci` + `npm test`), with `.gitattributes` forcing LF on text files and `normalizeLf` inside `scripts/build-registry.ts`.
+- **Rationale:** Protects registry freshness checks on Linux CI (`ubuntu-latest`) from Windows `core.autocrlf = true` CRLF checkouts; setting `engines` to `"^22.0.0 || >=24.0.0"` aligns with `vitest@4.1.12` (`^20.0.0 || ^22.0.0 || >=24.0.0`) and both CI jobs while noting Node `22` and `ubuntu-latest` have not executed locally on this Windows Node `26` workstation.

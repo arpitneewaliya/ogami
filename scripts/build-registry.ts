@@ -81,12 +81,16 @@ function toCamelCase(kebab: string): string {
   return kebab.replace(/-([a-z0-9])/g, (_, ch: string) => ch.toUpperCase());
 }
 
+function normalizeLf(source: string): string {
+  return source.replace(/\r\n/g, "\n");
+}
+
 /**
  * Rewrites template imports from `../../lib/<name>` to `@/lib/ogami/<name>`
  * so the shadcn CLI rewrites `@/lib/...` to the consumer project's `aliases.lib`.
  */
 export function rewriteTemplateLibImports(source: string): string {
-  return source.replace(
+  return normalizeLf(source).replace(
     /from\s+(["'])\.\.\/\.\.\/lib\/([^"']+)\1/g,
     (_match, quote: string, subpath: string) =>
       `from ${quote}@/lib/ogami/${subpath}${quote}`,
@@ -244,9 +248,8 @@ export async function buildRegistryPayloads(
 ): Promise<Map<string, string>> {
   const coreLibFiles: RegistryItemFile[] = await Promise.all(
     CORE_LIB_FILES.map(async (entry) => {
-      const content = await readFile(
-        path.join(rootDir, entry.sourceRelPath),
-        "utf8",
+      const content = normalizeLf(
+        await readFile(path.join(rootDir, entry.sourceRelPath), "utf8"),
       );
       return {
         path: entry.sourceRelPath,

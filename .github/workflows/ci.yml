@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Build, Lint, Typecheck & Contract Checks (Node 26)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js (.nvmrc)
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Build Next.js app
+        run: npm run build
+
+      - name: Run unit, render, and template contract tests
+        run: npm test
+
+      - name: Verify generated registry is up to date
+        run: |
+          npm run registry:build
+          if [ -n "$(git status --porcelain public/r/)" ]; then
+            echo "Error: public/r/ is out of date. Run 'npm run registry:build' and commit the changes."
+            git status --short public/r/
+            exit 1
+          fi
+
+  node-22:
+    name: Compatibility Tests (Node 22)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
