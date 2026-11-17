@@ -17,6 +17,7 @@ export default defineConfig({
       "registry/**/*.test.tsx",
       "app/**/*.test.ts",
       "app/**/*.test.tsx",
+      "scripts/**/*.test.ts",
     ],
   },
 });
