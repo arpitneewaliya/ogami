@@ -127,11 +127,10 @@ When `colors` includes `foregroundParam` or `backgroundParam`, the playground ch
 
 ## Register, generate previews, and verify
 
-1. Export the template in `registry/templates/index.ts`.
-2. Add its static `preview.png` import to `app/_lib/template-previews.ts`.
-3. Generate previews and rebuild `public/r/*.json`:
+Sync the generated template index & preview map, render `preview.png`, and rebuild `public/r/*.json`:
 
 ```bash
+npm run templates:sync
 npm run preview:build
 npm run registry:build
 npm test

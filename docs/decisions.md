@@ -80,3 +80,10 @@ Short log of key technical decisions made in Phases 0 and 1 (per `docs/PROJECT_B
 
 - **Decision:** Add `npx next typegen` before `npx tsc --noEmit` in `.github/workflows/ci.yml` rather than moving typechecking after `next build` or committing `next-env.d.ts` / `.next/types`.
 - **Rationale:** Verified on Next.js `16.4.6` (`node_modules/next/dist/docs/01-app/03-api-reference/06-cli/next.md`) that `next typegen` generates both `next-env.d.ts` (image module declarations for static `preview.png` imports) and `.next/types/routes.d.ts` (global `LayoutProps` / `PageProps` helpers) cleanly without a full build, keeping `.gitignore` unchanged and failing fast on type errors before `npm run build`. Also confirmed `npm test` (the Node `22` job) passes with neither `next-env.d.ts` nor `.next/` present.
+
+## 2026-11-17 — Automated `templates:sync` index/preview generation and `1280x640` repo social preview override
+
+- **Decision:**
+  - Generate `registry/templates/index.ts` and `app/_lib/template-previews.ts` deterministically via `scripts/sync-templates.ts` (`npm run templates:sync`, also invoked before `preview:build` and `registry:build`) using code-point sorted template folder names, LF line endings, and explicit static ES imports, verified for staleness in unit tests and CI.
+  - Add optional `width` and `height` overrides to `RenderTemplateOptions` in `registry/lib/render.tsx` (defaulting unchanged to `template.width ?? 1200` and `template.height ?? 630`), and generate `docs/social-preview.png` at `1280x640` (`51,997` bytes) from `repo-launch` via `scripts/generate-social-preview.ts`.
+- **Rationale:** Restores strict **"one contribution = one template folder"** authoring without sacrificing static `next/image` asset optimization, Turbopack compatibility, or `registry/` isolation (`registry/` still imports nothing from `app/`). Generating `docs/social-preview.png` at GitHub's recommended `1280x640` size (< 1 MB) uses Ogami's own renderer offline without modifying default `1200x630` OG card output.

@@ -44,6 +44,15 @@ jobs:
       - name: Run unit, render, and template contract tests
         run: npm test
 
+      - name: Verify generated template index and preview map are up to date
+        run: |
+          npm run templates:sync
+          if [ -n "$(git status --porcelain registry/templates/index.ts app/_lib/template-previews.ts)" ]; then
+            echo "Error: registry/templates/index.ts or app/_lib/template-previews.ts is stale. Run 'npm run templates:sync' and commit the changes."
+            git status --short registry/templates/index.ts app/_lib/template-previews.ts
+            exit 1
+          fi
+
       - name: Verify generated registry is up to date
         run: |
           npm run registry:build

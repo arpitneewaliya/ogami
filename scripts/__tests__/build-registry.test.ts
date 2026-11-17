@@ -3,6 +3,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { templateIds } from "@/registry/templates";
 import { DEFAULT_SITE_URL } from "../../site.config";
+import { buildSyncedTemplateFiles } from "../sync-templates";
 import {
   buildRegistryPayloads,
   REGISTRY_DEPENDENCIES,
@@ -11,6 +12,30 @@ import {
 } from "../build-registry";
 
 describe("registry build freshness and contracts", () => {
+  it("matches generated registry/templates/index.ts and app/_lib/template-previews.ts (run npm run templates:sync if stale)", async () => {
+    const rootDir = process.cwd();
+    const expected = await buildSyncedTemplateFiles(rootDir);
+
+    const actualIndex = await readFile(
+      path.join(rootDir, "registry", "templates", "index.ts"),
+      "utf8",
+    );
+    const actualPreviews = await readFile(
+      path.join(rootDir, "app", "_lib", "template-previews.ts"),
+      "utf8",
+    );
+
+    expect(
+      actualIndex,
+      "registry/templates/index.ts is stale. Run `npm run templates:sync` to regenerate.",
+    ).toBe(expected.registryIndexContent);
+
+    expect(
+      actualPreviews,
+      "app/_lib/template-previews.ts is stale. Run `npm run templates:sync` to regenerate.",
+    ).toBe(expected.templatePreviewsContent);
+  });
+
   it("matches public/r/ exactly against a fresh build (fails if out of date)", async () => {
     const rootDir = process.cwd();
     const outDir = path.join(rootDir, "public", "r");

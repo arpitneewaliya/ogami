@@ -173,19 +173,19 @@ export default defineTemplate({
 
 > **Note on `meta.json` `colors`:** `colors` is **optional**. When present, `/playground` evaluates WCAG contrast **only for the declared color pairs** (`4.5:1` normal text, `3:1` when `largeText: true`). Omitting `colors` does not assert that contrast passes; the playground explicitly notes when no pairs are declared.
 
-### 2. Wire the template into the index & preview map
+### 2. Sync index, generate preview, and rebuild the registry
 
-1. Register `myCardTemplate` in `registry/templates/index.ts`.
+No manual edits outside `registry/templates/my-card/` are needed:
+
+1. Sync `registry/templates/index.ts` and `app/_lib/template-previews.ts`:
+   ```bash
+   npm run templates:sync
+   ```
 2. Generate `registry/templates/my-card/preview.png` (`1200x630`):
    ```bash
    npm run preview:build
    ```
-3. Add the explicit static import for `my-card/preview.png` to `app/_lib/template-previews.ts`:
-   ```ts
-   import myCardPreview from "@/registry/templates/my-card/preview.png";
-   ```
-   and map `"my-card": myCardPreview` inside `TEMPLATE_PREVIEWS`.
-4. Rebuild the generated shadcn registry payloads in `public/r/`:
+3. Rebuild the generated shadcn registry payloads in `public/r/`:
    ```bash
    npm run registry:build
    ```
@@ -203,7 +203,7 @@ npm test
 npm run registry:build
 ```
 
-If `public/r/` shows any uncommitted changes after `npm run registry:build`, include those updated `public/r/*.json` files in your PR. You can also inspect your new card live with `npm run dev` at `http://localhost:3000/playground?template=my-card`.
+Include `registry/templates/index.ts`, `app/_lib/template-previews.ts`, and any updated `public/r/*.json` files in your PR. You can also inspect your new card live with `npm run dev` at `http://localhost:3000/playground?template=my-card`.
 
 ---
 
@@ -230,10 +230,12 @@ If `public/r/` shows any uncommitted changes after `npm run registry:build`, inc
 1. `npm run lint` (ESLint)
 2. `npx next typegen` + `npx tsc --noEmit` (Next.js route/asset types + TypeScript strict mode; no `any` without an explanatory comment)
 3. `npm run build` (`next build` with `cacheComponents` and `partialPrefetching` enabled)
-4. `npm test` (renders every registered template from its `sample` and checks `1200x630` PNG output; scans `registry/templates/` folders confirming `id === folder`, `meta.json`, valid `sample`, `.max(n)` string caps, and existing `1200x630` `preview.png` without requiring byte-identical PNG output across OSes; runs unit tests)
-5. `npm run registry:build` + `git status --porcelain public/r/` empty check
+4. `npm test` (renders every registered template from its `sample` and checks `1200x630` PNG output; fails if `registry/templates/index.ts`, `app/_lib/template-previews.ts`, or `public/r/` is stale; scans `registry/templates/` folders confirming `id === folder`, `meta.json`, valid `sample`, `.max(n)` string caps, and existing `1200x630` `preview.png` without requiring byte-identical PNG output across OSes)
+5. `npm run templates:sync` + `npm run registry:build` + `git status --porcelain` check on generated files
 
-### Unverified environments
+> **Note:** CI verifies that every `preview.png` exists and is a valid `1200x630` PNG, not that the image visually matches changes to `template.tsx`. Reviewers visually check `preview.png` updates in PRs.
 
-- **Linux CI (`ubuntu-latest`):** Workflow execution on GitHub's Linux runners (Node `26` and Node `22`) has not run yet until the first PR/push to GitHub.
-- **Vercel font tracing in production:** Deploying `/api/og` with `outputFileTracingIncludes` to Vercel serverless is unverified in production.
+### Verification status
+
+- **Linux CI (`ubuntu-latest`):** Verified green on GitHub Actions (`Node 26` and `Node 22` compatibility jobs).
+- **Vercel font tracing in production:** Deploying `/api/og` with `outputFileTracingIncludes` to Vercel serverless remains unverified in production (see `docs/launch-checklist.md`).

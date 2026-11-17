@@ -106,6 +106,18 @@ describe("renderTemplate and fallback card", () => {
     ]);
   });
 
+  it("supports optional width and height overrides while keeping 1200x630 as default", async () => {
+    const overridden = await renderTemplate(testTemplate, testTemplate.sample, {
+      width: 1280,
+      height: 640,
+    });
+    expect(overridden.ok).toBe(true);
+    if (!overridden.ok) return;
+
+    const png = parsePngDimensions(await overridden.response.arrayBuffer());
+    expect(png).toEqual({ isPng: true, width: 1280, height: 640 });
+  });
+
   it.skipIf(!japanesePackAvailable)(
     "renders Japanese text cleanly when NotoSansJP-Regular.ttf is installed",
     async () => {

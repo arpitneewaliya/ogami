@@ -38,9 +38,10 @@ See [Quick Start](content/docs/quick-start.md) (or `/docs/quick-start` on the si
 ## Links & Unverified Environments
 
 - **Gallery & Docs routes:** Run `npm run dev` and open `/` (Gallery), `/playground`, and `/docs`.
-- **Contribute a template:** Follow [CONTRIBUTING.md](CONTRIBUTING.md).
+- **Contribute a template:** Follow [CONTRIBUTING.md](CONTRIBUTING.md) (`one contribution = one folder` via `npm run templates:sync`).
+- **Launch & Demo docs:** [Production & Launch Checklist](docs/launch-checklist.md) and [Demo Recording Script](docs/demo-script.md).
 - **License:** MIT ([LICENSE](LICENSE)).
 
-> **What is not yet verified in production / CI:**
-> - **Linux CI (`ubuntu-latest`):** Workflow checks in `.github/workflows/ci.yml` (Active LTS Node `26` and Maintenance LTS Node `22`) are tested locally on Windows + clean LF checkouts, and remain unverified on GitHub's Linux runners until the first CI run.
-> - **Vercel production font tracing:** `outputFileTracingIncludes` for `.ttf` files has not been verified on a live Vercel deployment yet (local `next start` with and without `NotoSansJP-Regular.ttf` is verified).
+> **Verification status:**
+> - **Verified:** Local Windows builds/tests (`Node 26`), fresh `create-next-app` installs (`--no-src-dir`, `--src-dir`, and Japanese opt-in pack), and GitHub Actions `ubuntu-latest` CI (`Node 26` and `Node 22` jobs).
+> - **Unverified in production:** Vercel serverless font tracing (`outputFileTracingIncludes`), live Vercel CDN caching headers, and cold/warm serverless render timings (see [docs/launch-checklist.md](docs/launch-checklist.md)).

@@ -2,6 +2,7 @@ import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { DEFAULT_SITE_URL } from "../site.config";
+import { syncTemplates } from "./sync-templates";
 
 export const REGISTRY_ITEM_SCHEMA_URL =
   "https://ui.shadcn.com/schema/registry-item.json";
@@ -346,6 +347,7 @@ export async function buildRegistryPayloads(
 }
 
 export async function writeRegistry(rootDir = process.cwd()): Promise<string[]> {
+  await syncTemplates(rootDir);
   const outDir = path.join(rootDir, "public", "r");
   await mkdir(outDir, { recursive: true });
 

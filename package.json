@@ -10,8 +10,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "preview:build": "tsx scripts/generate-previews.ts",
-    "registry:build": "tsx scripts/build-registry.ts",
+    "preview:build": "tsx scripts/sync-templates.ts && tsx scripts/generate-previews.ts",
+    "registry:build": "tsx scripts/sync-templates.ts && tsx scripts/build-registry.ts",
+    "social-preview:build": "tsx scripts/generate-social-preview.ts",
+    "templates:sync": "tsx scripts/sync-templates.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },

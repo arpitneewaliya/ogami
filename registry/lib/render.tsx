@@ -60,6 +60,10 @@ export interface RenderTemplateOptions {
   fallbackLabel?: string;
   /** Optional custom HTTP headers merged onto the normal ImageResponse. */
   headers?: Record<string, string>;
+  /** Optional output width in pixels (defaults to `template.width ?? 1200`). */
+  width?: number;
+  /** Optional output height in pixels (defaults to `template.height ?? 630`). */
+  height?: number;
 }
 
 export type RenderTemplateResult =
@@ -299,6 +303,12 @@ export async function renderTemplate<TSchema extends z.ZodObject>(
   rawParams: unknown,
   options?: RenderTemplateOptions,
 ): Promise<RenderTemplateResult> {
+  const width = options?.width ?? template.width ?? DEFAULT_WIDTH;
+  const height = options?.height ?? template.height ?? DEFAULT_HEIGHT;
+  if (!Number.isSafeInteger(width) || width <= 0 || !Number.isSafeInteger(height) || height <= 0) {
+    throw new RangeError(`Expected positive integer dimensions, got ${width}x${height}.`);
+  }
+
   const parsed = template.params.safeParse(rawParams);
   if (!parsed.success) {
     return {
@@ -360,8 +370,8 @@ export async function renderTemplate<TSchema extends z.ZodObject>(
       fallbackLabel: options?.fallbackLabel,
       unsupportedScripts: error.scripts,
       warnings,
-      width: template.width,
-      height: template.height,
+      width,
+      height,
       headers: options?.headers,
     });
 
@@ -375,8 +385,6 @@ export async function renderTemplate<TSchema extends z.ZodObject>(
     };
   }
 
-  const width = template.width ?? DEFAULT_WIDTH;
-  const height = template.height ?? DEFAULT_HEIGHT;
   const fonts = await loadFontsForScripts(detectedScripts);
 
   const ctx: TemplateRenderContext = {
