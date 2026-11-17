@@ -196,6 +196,7 @@ Run the exact checks enforced by CI (use `npm` only; do not use `pnpm` or `yarn`
 
 ```bash
 npm run lint
+npx next typegen
 npx tsc --noEmit
 npm run build
 npm test
@@ -227,7 +228,7 @@ If `public/r/` shows any uncommitted changes after `npm run registry:build`, inc
 ### What CI checks on every PR
 
 1. `npm run lint` (ESLint)
-2. `npx tsc --noEmit` (TypeScript strict mode; no `any` without an explanatory comment)
+2. `npx next typegen` + `npx tsc --noEmit` (Next.js route/asset types + TypeScript strict mode; no `any` without an explanatory comment)
 3. `npm run build` (`next build` with `cacheComponents` and `partialPrefetching` enabled)
 4. `npm test` (renders every registered template from its `sample` and checks `1200x630` PNG output; scans `registry/templates/` folders confirming `id === folder`, `meta.json`, valid `sample`, `.max(n)` string caps, and existing `1200x630` `preview.png` without requiring byte-identical PNG output across OSes; runs unit tests)
 5. `npm run registry:build` + `git status --porcelain public/r/` empty check

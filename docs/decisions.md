@@ -73,5 +73,10 @@ Short log of key technical decisions made in Phases 0 and 1 (per `docs/PROJECT_B
 
 ## 2026-11-17 — GitHub Actions CI, Node LTS pinning, and LF line-ending normalization
 
-- **Decision:** Pin Active LTS Node `26` in `.nvmrc` for the main `.github/workflows/ci.yml` job (`lint`, `npx tsc --noEmit`, `build`, `test`, `registry:build` + `git status --porcelain public/r/` emptiness check) and add a compatibility `node-22` job (`npm ci` + `npm test`), with `.gitattributes` forcing LF on text files and `normalizeLf` inside `scripts/build-registry.ts`.
+- **Decision:** Pin Active LTS Node `26` in `.nvmrc` for the main `.github/workflows/ci.yml` job (`lint`, `npx next typegen`, `npx tsc --noEmit`, `build`, `test`, `registry:build` + `git status --porcelain public/r/` emptiness check) and add a compatibility `node-22` job (`npm ci` + `npm test`), with `.gitattributes` forcing LF on text files and `normalizeLf` inside `scripts/build-registry.ts`.
 - **Rationale:** Protects registry freshness checks on Linux CI (`ubuntu-latest`) from Windows `core.autocrlf = true` CRLF checkouts; setting `engines` to `"^22.0.0 || >=24.0.0"` aligns with `vitest@4.1.12` (`^20.0.0 || ^22.0.0 || >=24.0.0`) and both CI jobs while noting Node `22` and `ubuntu-latest` have not executed locally on this Windows Node `26` workstation.
+
+## 2026-11-17 — Run `npx next typegen` before `npx tsc --noEmit` in CI
+
+- **Decision:** Add `npx next typegen` before `npx tsc --noEmit` in `.github/workflows/ci.yml` rather than moving typechecking after `next build` or committing `next-env.d.ts` / `.next/types`.
+- **Rationale:** Verified on Next.js `16.4.6` (`node_modules/next/dist/docs/01-app/03-api-reference/06-cli/next.md`) that `next typegen` generates both `next-env.d.ts` (image module declarations for static `preview.png` imports) and `.next/types/routes.d.ts` (global `LayoutProps` / `PageProps` helpers) cleanly without a full build, keeping `.gitignore` unchanged and failing fast on type errors before `npm run build`. Also confirmed `npm test` (the Node `22` job) passes with neither `next-env.d.ts` nor `.next/` present.
