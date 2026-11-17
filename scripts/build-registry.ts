@@ -29,6 +29,10 @@ const CORE_LIB_FILES = [
     sourceRelPath: "registry/lib/render.tsx",
     target: "lib/ogami/render.tsx",
   },
+  {
+    sourceRelPath: "registry/lib/scripts.ts",
+    target: "lib/ogami/scripts.ts",
+  },
 ] as const;
 
 export interface TemplateMeta {

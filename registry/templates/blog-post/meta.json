@@ -4,5 +4,31 @@
   "description": "Warm editorial card for articles, essays, and technical blog posts.",
   "author": "Jane Doe",
   "tags": ["blog", "article", "editorial", "light"],
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "colors": [
+    {
+      "label": "Headline & author on card",
+      "foreground": "#18181b",
+      "background": "#ffffff",
+      "largeText": true
+    },
+    {
+      "label": "Read time & date on card",
+      "foreground": "#78716c",
+      "background": "#ffffff",
+      "largeText": false
+    },
+    {
+      "label": "Category text on badge",
+      "foreground": "#c2410c",
+      "background": "#fff7ed",
+      "largeText": false
+    },
+    {
+      "label": "Author initial on avatar",
+      "foreground": "#faf8f5",
+      "background": "#18181b",
+      "largeText": true
+    }
+  ]
 }

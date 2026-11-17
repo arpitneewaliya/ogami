@@ -32,6 +32,11 @@
           "path": "registry/lib/render.tsx",
           "type": "registry:file",
           "target": "lib/ogami/render.tsx"
+        },
+        {
+          "path": "registry/lib/scripts.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/scripts.ts"
         }
       ]
     },
@@ -79,6 +84,11 @@
           "path": "registry/lib/render.tsx",
           "type": "registry:file",
           "target": "lib/ogami/render.tsx"
+        },
+        {
+          "path": "registry/lib/scripts.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/scripts.ts"
         }
       ]
     },
@@ -126,6 +136,11 @@
           "path": "registry/lib/render.tsx",
           "type": "registry:file",
           "target": "lib/ogami/render.tsx"
+        },
+        {
+          "path": "registry/lib/scripts.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/scripts.ts"
         }
       ]
     },
@@ -173,6 +188,11 @@
           "path": "registry/lib/render.tsx",
           "type": "registry:file",
           "target": "lib/ogami/render.tsx"
+        },
+        {
+          "path": "registry/lib/scripts.ts",
+          "type": "registry:file",
+          "target": "lib/ogami/scripts.ts"
         }
       ]
     }

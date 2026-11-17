@@ -4,5 +4,32 @@
   "description": "Clean dark-mode announcement card for developer tools, releases, and documentation.",
   "author": "Jane Doe",
   "tags": ["minimal", "dark", "tech", "announcement"],
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "colors": [
+    {
+      "label": "Title on card",
+      "foreground": "#fafafa",
+      "background": "#111113",
+      "largeText": true
+    },
+    {
+      "label": "Subtitle & domain on card",
+      "foreground": "#a1a1aa",
+      "background": "#111113",
+      "largeText": false
+    },
+    {
+      "label": "Tag text on pill",
+      "foreground": "#e4e4e7",
+      "background": "#18181b",
+      "largeText": false
+    },
+    {
+      "label": "Accent bar & dot on card",
+      "foreground": "#38bdf8",
+      "background": "#111113",
+      "largeText": true,
+      "foregroundParam": "accentColor"
+    }
+  ]
 }

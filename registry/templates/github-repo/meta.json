@@ -4,5 +4,31 @@
   "description": "Repository card with inline repo, star, and fork icons and language indicator.",
   "author": "Jane Doe",
   "tags": ["github", "repository", "open-source", "code"],
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "colors": [
+    {
+      "label": "Repository name on card",
+      "foreground": "#f0f6fc",
+      "background": "#161b22",
+      "largeText": true
+    },
+    {
+      "label": "Description on card",
+      "foreground": "#8b949e",
+      "background": "#161b22",
+      "largeText": true
+    },
+    {
+      "label": "Language & stats on card",
+      "foreground": "#c9d1d9",
+      "background": "#161b22",
+      "largeText": true
+    },
+    {
+      "label": "REPOSITORY badge on card",
+      "foreground": "#8b949e",
+      "background": "#161b22",
+      "largeText": false
+    }
+  ]
 }

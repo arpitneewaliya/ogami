@@ -62,11 +62,24 @@ describe("registry build freshness and contracts", () => {
         expect(libFile.target).toMatch(/^lib\/ogami\//);
       }
 
+      const libTargets = item.files.slice(1).map((f) => f.target);
+      expect(libTargets).toContain("lib/ogami/scripts.ts");
+      expect(libTargets).not.toContain("lib/ogami/contrast.ts");
+      expect(libTargets).not.toContain("lib/ogami/platforms.ts");
+
       expect(item.docs).toContain("app/api/og/route.tsx");
       expect(item.docs).toContain("outputFileTracingIncludes");
       expect(item.docs).toContain("NotoSansJP-Regular.ttf");
       expect(item.docs).toContain("Zod 4");
       expect(item.docs).toContain("Zod 3");
     }
+
+    const coreItem = JSON.parse(
+      expected.get("core.json") ?? "{}",
+    ) as RegistryItemPayload;
+    const coreTargets = coreItem.files.map((f) => f.target);
+    expect(coreTargets).toContain("lib/ogami/scripts.ts");
+    expect(coreTargets).not.toContain("lib/ogami/contrast.ts");
+    expect(coreTargets).not.toContain("lib/ogami/platforms.ts");
   });
 });
