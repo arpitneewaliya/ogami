@@ -1,0 +1,180 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "ogami",
+  "homepage": "http://localhost:3000",
+  "items": [
+    {
+      "name": "core",
+      "type": "registry:lib",
+      "title": "Ogami Core Runtime",
+      "description": "Core template contract, next/og renderer, script-safe font loader, and autoFit helper for Ogami.",
+      "dependencies": [
+        "zod@^4.0.0",
+        "geist@^1.9.2"
+      ],
+      "files": [
+        {
+          "path": "registry/lib/auto-fit.ts",
+          "type": "registry:lib",
+          "target": "@lib/ogami/auto-fit.ts"
+        },
+        {
+          "path": "registry/lib/define-template.ts",
+          "type": "registry:lib",
+          "target": "@lib/ogami/define-template.ts"
+        },
+        {
+          "path": "registry/lib/fonts.ts",
+          "type": "registry:lib",
+          "target": "@lib/ogami/fonts.ts"
+        },
+        {
+          "path": "registry/lib/render.tsx",
+          "type": "registry:lib",
+          "target": "@lib/ogami/render.tsx"
+        }
+      ]
+    },
+    {
+      "name": "blog-post",
+      "type": "registry:block",
+      "title": "Blog Post",
+      "description": "Warm editorial card for articles, essays, and technical blog posts.",
+      "author": "Jane Doe",
+      "dependencies": [
+        "zod@^4.0.0",
+        "geist@^1.9.2"
+      ],
+      "categories": [
+        "blog",
+        "article",
+        "editorial",
+        "light"
+      ],
+      "meta": {
+        "version": "1.0.0"
+      },
+      "files": [
+        {
+          "path": "registry/templates/blog-post/template.tsx",
+          "type": "registry:component",
+          "target": "@components/ogami/blog-post.tsx"
+        },
+        {
+          "path": "registry/lib/auto-fit.ts",
+          "type": "registry:lib",
+          "target": "@lib/ogami/auto-fit.ts"
+        },
+        {
+          "path": "registry/lib/define-template.ts",
+          "type": "registry:lib",
+          "target": "@lib/ogami/define-template.ts"
+        },
+        {
+          "path": "registry/lib/fonts.ts",
+          "type": "registry:lib",
+          "target": "@lib/ogami/fonts.ts"
+        },
+        {
+          "path": "registry/lib/render.tsx",
+          "type": "registry:lib",
+          "target": "@lib/ogami/render.tsx"
+        }
+      ]
+    },
+    {
+      "name": "github-repo",
+      "type": "registry:block",
+      "title": "GitHub Repo",
+      "description": "Repository card with inline repo, star, and fork icons and language indicator.",
+      "author": "Jane Doe",
+      "dependencies": [
+        "zod@^4.0.0",
+        "geist@^1.9.2"
+      ],
+      "categories": [
+        "github",
+        "repository",
+        "open-source",
+        "code"
+      ],
+      "meta": {
+        "version": "1.0.0"
+      },
+      "files": [
+        {
+          "path": "registry/templates/github-repo/template.tsx",
+          "type": "registry:component",
+          "target": "@components/ogami/github-repo.tsx"
+        },
+        {
+          "path": "registry/lib/auto-fit.ts",
+          "type": "registry:lib",
+          "target": "@lib/ogami/auto-fit.ts"
+        },
+        {
+          "path": "registry/lib/define-template.ts",
+          "type": "registry:lib",
+          "target": "@lib/ogami/define-template.ts"
+        },
+        {
+          "path": "registry/lib/fonts.ts",
+          "type": "registry:lib",
+          "target": "@lib/ogami/fonts.ts"
+        },
+        {
+          "path": "registry/lib/render.tsx",
+          "type": "registry:lib",
+          "target": "@lib/ogami/render.tsx"
+        }
+      ]
+    },
+    {
+      "name": "minimal-tech",
+      "type": "registry:block",
+      "title": "Minimal Tech",
+      "description": "Clean dark-mode announcement card for developer tools, releases, and documentation.",
+      "author": "Jane Doe",
+      "dependencies": [
+        "zod@^4.0.0",
+        "geist@^1.9.2"
+      ],
+      "categories": [
+        "minimal",
+        "dark",
+        "tech",
+        "announcement"
+      ],
+      "meta": {
+        "version": "1.0.0"
+      },
+      "files": [
+        {
+          "path": "registry/templates/minimal-tech/template.tsx",
+          "type": "registry:component",
+          "target": "@components/ogami/minimal-tech.tsx"
+        },
+        {
+          "path": "registry/lib/auto-fit.ts",
+          "type": "registry:lib",
+          "target": "@lib/ogami/auto-fit.ts"
+        },
+        {
+          "path": "registry/lib/define-template.ts",
+          "type": "registry:lib",
+          "target": "@lib/ogami/define-template.ts"
+        },
+        {
+          "path": "registry/lib/fonts.ts",
+          "type": "registry:lib",
+          "target": "@lib/ogami/fonts.ts"
+        },
+        {
+          "path": "registry/lib/render.tsx",
+          "type": "registry:lib",
+          "target": "@lib/ogami/render.tsx"
+        }
+      ]
+    }
+  ]
+}
