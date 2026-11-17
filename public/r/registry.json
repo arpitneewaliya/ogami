@@ -5,7 +5,7 @@
   "items": [
     {
       "name": "core",
-      "type": "registry:lib",
+      "type": "registry:item",
       "title": "Ogami Core Runtime",
       "description": "Core template contract, next/og renderer, script-safe font loader, and autoFit helper for Ogami.",
       "dependencies": [
@@ -15,29 +15,29 @@
       "files": [
         {
           "path": "registry/lib/auto-fit.ts",
-          "type": "registry:lib",
-          "target": "@lib/ogami/auto-fit.ts"
+          "type": "registry:file",
+          "target": "lib/ogami/auto-fit.ts"
         },
         {
           "path": "registry/lib/define-template.ts",
-          "type": "registry:lib",
-          "target": "@lib/ogami/define-template.ts"
+          "type": "registry:file",
+          "target": "lib/ogami/define-template.ts"
         },
         {
           "path": "registry/lib/fonts.ts",
-          "type": "registry:lib",
-          "target": "@lib/ogami/fonts.ts"
+          "type": "registry:file",
+          "target": "lib/ogami/fonts.ts"
         },
         {
           "path": "registry/lib/render.tsx",
-          "type": "registry:lib",
-          "target": "@lib/ogami/render.tsx"
+          "type": "registry:file",
+          "target": "lib/ogami/render.tsx"
         }
       ]
     },
     {
       "name": "blog-post",
-      "type": "registry:block",
+      "type": "registry:item",
       "title": "Blog Post",
       "description": "Warm editorial card for articles, essays, and technical blog posts.",
       "author": "Jane Doe",
@@ -57,34 +57,34 @@
       "files": [
         {
           "path": "registry/templates/blog-post/template.tsx",
-          "type": "registry:component",
-          "target": "@components/ogami/blog-post.tsx"
+          "type": "registry:file",
+          "target": "components/ogami/blog-post.tsx"
         },
         {
           "path": "registry/lib/auto-fit.ts",
-          "type": "registry:lib",
-          "target": "@lib/ogami/auto-fit.ts"
+          "type": "registry:file",
+          "target": "lib/ogami/auto-fit.ts"
         },
         {
           "path": "registry/lib/define-template.ts",
-          "type": "registry:lib",
-          "target": "@lib/ogami/define-template.ts"
+          "type": "registry:file",
+          "target": "lib/ogami/define-template.ts"
         },
         {
           "path": "registry/lib/fonts.ts",
-          "type": "registry:lib",
-          "target": "@lib/ogami/fonts.ts"
+          "type": "registry:file",
+          "target": "lib/ogami/fonts.ts"
         },
         {
           "path": "registry/lib/render.tsx",
-          "type": "registry:lib",
-          "target": "@lib/ogami/render.tsx"
+          "type": "registry:file",
+          "target": "lib/ogami/render.tsx"
         }
       ]
     },
     {
       "name": "github-repo",
-      "type": "registry:block",
+      "type": "registry:item",
       "title": "GitHub Repo",
       "description": "Repository card with inline repo, star, and fork icons and language indicator.",
       "author": "Jane Doe",
@@ -104,34 +104,34 @@
       "files": [
         {
           "path": "registry/templates/github-repo/template.tsx",
-          "type": "registry:component",
-          "target": "@components/ogami/github-repo.tsx"
+          "type": "registry:file",
+          "target": "components/ogami/github-repo.tsx"
         },
         {
           "path": "registry/lib/auto-fit.ts",
-          "type": "registry:lib",
-          "target": "@lib/ogami/auto-fit.ts"
+          "type": "registry:file",
+          "target": "lib/ogami/auto-fit.ts"
         },
         {
           "path": "registry/lib/define-template.ts",
-          "type": "registry:lib",
-          "target": "@lib/ogami/define-template.ts"
+          "type": "registry:file",
+          "target": "lib/ogami/define-template.ts"
         },
         {
           "path": "registry/lib/fonts.ts",
-          "type": "registry:lib",
-          "target": "@lib/ogami/fonts.ts"
+          "type": "registry:file",
+          "target": "lib/ogami/fonts.ts"
         },
         {
           "path": "registry/lib/render.tsx",
-          "type": "registry:lib",
-          "target": "@lib/ogami/render.tsx"
+          "type": "registry:file",
+          "target": "lib/ogami/render.tsx"
         }
       ]
     },
     {
       "name": "minimal-tech",
-      "type": "registry:block",
+      "type": "registry:item",
       "title": "Minimal Tech",
       "description": "Clean dark-mode announcement card for developer tools, releases, and documentation.",
       "author": "Jane Doe",
@@ -151,28 +151,28 @@
       "files": [
         {
           "path": "registry/templates/minimal-tech/template.tsx",
-          "type": "registry:component",
-          "target": "@components/ogami/minimal-tech.tsx"
+          "type": "registry:file",
+          "target": "components/ogami/minimal-tech.tsx"
         },
         {
           "path": "registry/lib/auto-fit.ts",
-          "type": "registry:lib",
-          "target": "@lib/ogami/auto-fit.ts"
+          "type": "registry:file",
+          "target": "lib/ogami/auto-fit.ts"
         },
         {
           "path": "registry/lib/define-template.ts",
-          "type": "registry:lib",
-          "target": "@lib/ogami/define-template.ts"
+          "type": "registry:file",
+          "target": "lib/ogami/define-template.ts"
         },
         {
           "path": "registry/lib/fonts.ts",
-          "type": "registry:lib",
-          "target": "@lib/ogami/fonts.ts"
+          "type": "registry:file",
+          "target": "lib/ogami/fonts.ts"
         },
         {
           "path": "registry/lib/render.tsx",
-          "type": "registry:lib",
-          "target": "@lib/ogami/render.tsx"
+          "type": "registry:file",
+          "target": "lib/ogami/render.tsx"
         }
       ]
     }

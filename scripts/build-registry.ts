@@ -15,19 +15,19 @@ const NOTO_SANS_JP_URL =
 const CORE_LIB_FILES = [
   {
     sourceRelPath: "registry/lib/auto-fit.ts",
-    target: "@lib/ogami/auto-fit.ts",
+    target: "lib/ogami/auto-fit.ts",
   },
   {
     sourceRelPath: "registry/lib/define-template.ts",
-    target: "@lib/ogami/define-template.ts",
+    target: "lib/ogami/define-template.ts",
   },
   {
     sourceRelPath: "registry/lib/fonts.ts",
-    target: "@lib/ogami/fonts.ts",
+    target: "lib/ogami/fonts.ts",
   },
   {
     sourceRelPath: "registry/lib/render.tsx",
-    target: "@lib/ogami/render.tsx",
+    target: "lib/ogami/render.tsx",
   },
 ] as const;
 
@@ -42,7 +42,7 @@ export interface TemplateMeta {
 
 export interface RegistryItemFile {
   path: string;
-  type: "registry:lib" | "registry:component";
+  type: "registry:file";
   target: string;
   content?: string;
 }
@@ -50,7 +50,7 @@ export interface RegistryItemFile {
 export interface RegistryItemPayload {
   $schema: string;
   name: string;
-  type: "registry:lib" | "registry:block";
+  type: "registry:item";
   title: string;
   description: string;
   author?: string;
@@ -86,6 +86,12 @@ export function rewriteTemplateLibImports(source: string): string {
 
 function buildSharedDocsFooter(): string {
   return [
+    "### Requirements — Zod 4 (`zod@^4`) is required",
+    "",
+    "- **Important:** Ogami requires **Zod 4 (`zod@^4.0.0`)**. `@/lib/ogami/define-template` and `@/lib/ogami/render` use Zod v4 internals (`schema.def`, `.maxLength`, and `z.core.$ZodIssue`).",
+    "- **Projects on Zod 3:** Installing on an app pinned to `zod@3.x` will fail TypeScript checks and runtime schema inspection unless upgraded to `zod@^4` (`npm install zod@^4`).",
+    "- Do **not** add `export const runtime = ...` to `app/api/og/route.tsx` if your app uses Next.js `cacheComponents`.",
+    "",
     "### Vercel serverless font tracing (`next.config.ts`)",
     "",
     "```ts",
@@ -111,18 +117,13 @@ function buildSharedDocsFooter(): string {
     "mkdir -p ogami/fonts/cjk",
     `curl -L "${NOTO_SANS_JP_URL}" -o ogami/fonts/cjk/NotoSansJP-Regular.ttf`,
     "```",
-    "",
-    "### Requirements",
-    "",
-    "- **Zod 4 (`zod@^4.0.0`)** is required by `@/lib/ogami/define-template` and `@/lib/ogami/render`.",
-    "- Do **not** add `export const runtime = ...` to `app/api/og/route.tsx` if your app uses Next.js `cacheComponents`.",
   ].join("\n");
 }
 
 export function buildRouteSnippet(templateId: string): string {
   const varName = `${toCamelCase(templateId)}Template`;
   return [
-    "### Add `app/api/og/route.tsx`",
+    "### Add `app/api/og/route.tsx` (or `src/app/api/og/route.tsx` if using `src/`)",
     "",
     "```tsx",
     'import type { NextRequest } from "next/server";',
@@ -239,7 +240,7 @@ export async function buildRegistryPayloads(
       );
       return {
         path: entry.sourceRelPath,
-        type: "registry:lib",
+        type: "registry:file",
         target: entry.target,
         content,
       };
@@ -249,7 +250,7 @@ export async function buildRegistryPayloads(
   const coreItem: RegistryItemPayload = {
     $schema: REGISTRY_ITEM_SCHEMA_URL,
     name: "core",
-    type: "registry:lib",
+    type: "registry:item",
     title: "Ogami Core Runtime",
     description:
       "Core template contract, next/og renderer, script-safe font loader, and autoFit helper for Ogami.",
@@ -281,15 +282,15 @@ export async function buildRegistryPayloads(
 
     const templateFile: RegistryItemFile = {
       path: `registry/templates/${folder}/template.tsx`,
-      type: "registry:component",
-      target: `@components/ogami/${folder}.tsx`,
+      type: "registry:file",
+      target: `components/ogami/${folder}.tsx`,
       content: rewrittenTemplate,
     };
 
     templateItems.push({
       $schema: REGISTRY_ITEM_SCHEMA_URL,
       name: meta.id,
-      type: "registry:block",
+      type: "registry:item",
       title: meta.name,
       description: meta.description,
       author: meta.author,

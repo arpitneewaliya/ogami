@@ -287,24 +287,42 @@ describe("GET /api/og", () => {
     expect(json.issues.map((i) => i.field)).toEqual(["title", "accentColor"]);
   });
 
-  it("returns the Option 1 fallback card (never 500) for unsupported scripts without fetching", async () => {
+  it("returns the Option 1 fallback card (200 image/png with no-store, never 400/500) for unsupported scripts without fetching", async () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch");
     try {
-      const response = await GET(
-        makeRequest(
-          `?template=minimal-tech&title=${encodeURIComponent("नमस्ते दुनिया")}`,
-        ),
-      );
+      const cases = [
+        {
+          query: `?template=minimal-tech&title=${encodeURIComponent("नमस्ते दुनिया")}`,
+          expectedScript: "devanagari",
+        },
+        {
+          query: `?template=github-repo&name=${encodeURIComponent("مرحبا بالعالم")}`,
+          expectedScript: "arabic",
+        },
+        {
+          query: `?template=blog-post&title=${encodeURIComponent("Launch 🚀")}&author=Jane+Doe&emoji=fallback`,
+          expectedScript: "emoji",
+        },
+      ] as const;
 
-      expect(response.status).toBe(200);
-      expect(response.headers.get("cache-control")).toBe("no-store");
-      expect(response.headers.get("x-ogami-fallback")).toBe("true");
-      expect(response.headers.get("x-ogami-unsupported-scripts")).toBe(
-        "devanagari",
-      );
+      for (const testCase of cases) {
+        const response = await GET(makeRequest(testCase.query));
 
-      const png = parsePngDimensions(await response.arrayBuffer());
-      expect(png).toEqual({ isPng: true, width: 1200, height: 630 });
+        expect(response.status).toBe(200);
+        expect(response.headers.get("content-type")).toBe("image/png");
+        expect(response.headers.get("cache-control")).toBe("no-store");
+        expect(response.headers.get("cache-control")).not.toBe(
+          DEFAULT_CACHE_CONTROL,
+        );
+        expect(response.headers.get("x-ogami-fallback")).toBe("true");
+        expect(response.headers.get("x-ogami-unsupported-scripts")).toBe(
+          testCase.expectedScript,
+        );
+
+        const png = parsePngDimensions(await response.arrayBuffer());
+        expect(png).toEqual({ isPng: true, width: 1200, height: 630 });
+      }
+
       expect(getCachedFontPaths().sort()).toEqual([
         "registry/fonts/Geist-Bold.ttf",
         "registry/fonts/Geist-Regular.ttf",
