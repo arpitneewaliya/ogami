@@ -5,6 +5,10 @@
  */
 export const DEFAULT_SITE_URL = "https://ogami-toolkit.vercel.app";
 
+export const GITHUB_REPO_URL = "https://github.com/arpitneewaliya/ogami";
+export const MIT_LICENSE_URL =
+  "https://github.com/arpitneewaliya/ogami/blob/main/LICENSE";
+
 export interface SiteUrlConfig {
   url: string;
   isPlaceholder: boolean;
