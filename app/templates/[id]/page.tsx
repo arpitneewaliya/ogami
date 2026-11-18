@@ -119,7 +119,7 @@ async function TemplateDetailContent({
   const metadataSnippet = buildUsageSnippet(template.name, sampleOgPath);
 
   return (
-    <main className="mx-auto flex max-w-6xl flex-col gap-12 px-6 py-10 sm:py-12">
+    <main className="mx-auto flex max-w-6xl flex-col gap-12 px-4 py-10 sm:px-6 sm:py-12">
       {/* Breadcrumb & Heading */}
       <div className="flex flex-col gap-4">
         <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-zinc-400">
@@ -166,7 +166,7 @@ async function TemplateDetailContent({
 
       {/* Preview + Install */}
       <section className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
-        <div className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/40">
+        <div className="min-w-0 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/40">
           <Image
             src={preview}
             alt={getTemplatePreviewAlt(template)}
@@ -183,30 +183,30 @@ async function TemplateDetailContent({
           </div>
         </div>
 
-        <div className="flex flex-col gap-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-5">
-          <div className="flex flex-col gap-2">
+        <div className="flex min-w-0 flex-col gap-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-5">
+          <div className="flex min-w-0 flex-col gap-2">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-300">
               Install Template
             </h2>
             <p className="text-xs leading-5 text-zinc-400">
               Copies{" "}
-              <code className="font-mono text-zinc-200">
+              <code className="break-words font-mono text-zinc-200">
                 components/ogami/{template.id}.tsx
               </code>{" "}
               and runtime helpers into{" "}
-              <code className="font-mono text-zinc-200">lib/ogami/</code> (or{" "}
-              <code className="font-mono text-zinc-200">src/</code>). Requires{" "}
-              <code className="font-mono text-zinc-200">zod@^4</code>.
+              <code className="break-words font-mono text-zinc-200">lib/ogami/</code> (or{" "}
+              <code className="break-words font-mono text-zinc-200">src/</code>). Requires{" "}
+              <code className="break-words font-mono text-zinc-200">zod@^4</code>.
             </p>
             <InstallCommand itemName={template.id} />
           </div>
 
-          <div className="flex flex-col gap-2 border-t border-zinc-800 pt-4">
+          <div className="flex min-w-0 flex-col gap-2 border-t border-zinc-800 pt-4">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-300">
               Dynamic /api/og URL
             </h2>
-            <div className="flex items-center justify-between gap-2 rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-2">
-              <code className="overflow-x-auto font-mono text-xs text-zinc-300">
+            <div className="flex min-w-0 items-center justify-between gap-2 rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-2">
+              <code className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap font-mono text-xs text-zinc-300">
                 {sampleOgPath}
               </code>
               <CopyButton text={sampleOgPath} label="Copy URL" />
@@ -231,7 +231,7 @@ async function TemplateDetailContent({
       </section>
 
       {/* Parameter Table (derived from Zod schema via z.toJSONSchema) */}
-      <section aria-labelledby="params-heading" className="flex flex-col gap-4">
+      <section aria-labelledby="params-heading" className="flex min-w-0 flex-col gap-4">
         <h2 id="params-heading" className="text-xl font-bold text-zinc-100">
           Parameters
         </h2>
@@ -292,16 +292,16 @@ async function TemplateDetailContent({
       </section>
 
       {/* Usage Snippet */}
-      <section aria-labelledby="usage-heading" className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
+      <section aria-labelledby="usage-heading" className="flex min-w-0 flex-col gap-4">
+        <div className="flex items-center justify-between gap-2">
           <h2 id="usage-heading" className="text-xl font-bold text-zinc-100">
-            Next.js <code className="font-mono text-lg">generateMetadata</code>{" "}
+            Next.js <code className="break-words font-mono text-lg">generateMetadata</code>{" "}
             Usage
           </h2>
           <CopyButton text={metadataSnippet} label="Copy snippet" />
         </div>
-        <pre className="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-900/80 p-4 text-xs leading-6 text-zinc-200">
-          <code className="font-mono">{metadataSnippet}</code>
+        <pre className="max-w-full overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-900/80 p-4 text-xs leading-6 text-zinc-200">
+          <code className="block overflow-x-auto font-mono">{metadataSnippet}</code>
         </pre>
       </section>
     </main>

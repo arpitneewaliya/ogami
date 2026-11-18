@@ -181,7 +181,7 @@ function renderInlineTokens(
         return (
           <code
             key={key}
-            className="rounded border border-zinc-800 bg-zinc-900 px-1.5 py-0.5 font-mono text-[0.875em] text-sky-300"
+            className="break-words rounded border border-zinc-800 bg-zinc-900 px-1.5 py-0.5 font-mono text-[0.875em] text-sky-300"
           >
             {codeToken.text}
           </code>
@@ -321,14 +321,14 @@ function renderBlockTokens(
         return (
           <pre
             key={key}
-            className="mt-5 overflow-x-auto rounded-lg border border-zinc-800 bg-zinc-900/90 p-4 text-xs leading-6 text-zinc-100"
+            className="mt-5 max-w-full overflow-x-auto rounded-lg border border-zinc-800 bg-zinc-900/90 p-4 text-xs leading-6 text-zinc-100"
           >
             {codeToken.lang ? (
               <div className="mb-2 text-[10px] font-medium uppercase tracking-wider text-zinc-500">
                 {codeToken.lang}
               </div>
             ) : null}
-            <code className="font-mono">{codeToken.text}</code>
+            <code className="block overflow-x-auto font-mono">{codeToken.text}</code>
           </pre>
         );
       }

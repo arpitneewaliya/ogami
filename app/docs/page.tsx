@@ -17,7 +17,7 @@ export default function DocsIndexPage() {
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
       <SiteHeader active="docs" />
 
-      <main className="mx-auto flex max-w-5xl flex-col gap-10 px-6 py-12">
+      <main className="mx-auto flex max-w-5xl flex-col gap-10 px-4 py-12 sm:px-6">
         <div className="flex flex-col gap-3">
           <h1 className="text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl">
             Ogami Documentation

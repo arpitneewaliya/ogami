@@ -17,7 +17,7 @@ export default function SiteHeader({ active }: SiteHeaderProps) {
 
   return (
     <header className="border-b border-zinc-800/80 bg-zinc-950/90">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-3 sm:px-6 sm:py-4">
         <Link
           href="/"
           className="flex items-center gap-2.5 text-base font-semibold tracking-tight text-zinc-50 hover:text-sky-400 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
@@ -38,7 +38,7 @@ export default function SiteHeader({ active }: SiteHeaderProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`rounded-md px-3 py-1.5 text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 ${
+                className={`rounded-md px-2.5 py-1.5 text-xs font-medium transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 sm:px-3 sm:text-sm ${
                   isActive
                     ? "bg-zinc-800 text-zinc-50"
                     : "text-zinc-300 hover:bg-zinc-900 hover:text-zinc-50"

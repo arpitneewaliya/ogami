@@ -331,7 +331,7 @@ export default function PlaygroundClient({
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
       <header className="border-b border-zinc-800 bg-zinc-950/80">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-3 sm:px-6 sm:py-4">
           <div className="flex items-center gap-3">
             <Link
               href="/"
@@ -349,9 +349,9 @@ export default function PlaygroundClient({
         </div>
       </header>
 
-      <main className="mx-auto grid max-w-7xl gap-8 px-6 py-8 lg:grid-cols-[400px_1fr]">
+      <main className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[400px_1fr]">
         {/* Left panel: template picker, zod-generated form, script warnings */}
-        <section className="flex flex-col gap-6">
+        <section className="flex min-w-0 flex-col gap-6">
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
@@ -617,8 +617,8 @@ export default function PlaygroundClient({
                 Emoji detected (stripped by default)
               </div>
               <p className="mt-1">
-                <code>next/og</code> triggers external Twemoji CDN requests when
-                rendering emoji, so <code>/api/og</code> strips them by default
+                <code className="break-words font-mono">next/og</code> triggers external Twemoji CDN requests when
+                rendering emoji, so <code className="break-words font-mono">/api/og</code> strips them by default
                 to stay offline-safe.
               </p>
               <ul className="mt-1.5 flex flex-col gap-1">
@@ -634,7 +634,7 @@ export default function PlaygroundClient({
         </section>
 
         {/* Right panel: live preview, platform overlays, contrast, copy controls */}
-        <section className="flex flex-col gap-6">
+        <section className="flex min-w-0 flex-col gap-6">
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
@@ -793,8 +793,8 @@ export default function PlaygroundClient({
             )}
 
             {previewMeta.warnings ? (
-              <p className="mt-2 text-xs text-amber-300">
-                Route header <code>X-Ogami-Warnings</code>:{" "}
+              <p className="mt-2 break-words text-xs text-amber-300">
+                Route header <code className="break-words font-mono">X-Ogami-Warnings</code>:{" "}
                 {previewMeta.warnings}
               </p>
             ) : null}
@@ -846,7 +846,7 @@ export default function PlaygroundClient({
 
           <div className="grid gap-6 md:grid-cols-2">
             {/* WCAG Contrast panel */}
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
+            <div className="min-w-0 rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
                   Contrast Audit (WCAG AA)
@@ -859,13 +859,13 @@ export default function PlaygroundClient({
                 ) : null}
               </div>
               <p className="mt-1 text-[11px] text-zinc-400">
-                Checks declared color pairs in <code>meta.json</code> only.
+                Checks declared color pairs in <code className="break-words font-mono">meta.json</code> only.
               </p>
 
               {contrastReport.declaredCount === 0 ? (
                 <p className="mt-3 text-xs text-zinc-400">
                   This template declares no color pairs in{" "}
-                  <code>meta.json</code>, so contrast was not audited.
+                  <code className="break-words font-mono">meta.json</code>, so contrast was not audited.
                 </p>
               ) : (
                 <ul className="mt-3 flex flex-col gap-2">
@@ -914,7 +914,7 @@ export default function PlaygroundClient({
             </div>
 
             {/* Copy URL & Code Snippet */}
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
+            <div className="min-w-0 rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
               <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
                 Share &amp; Integration
               </h2>
@@ -939,8 +939,8 @@ export default function PlaygroundClient({
                     : "Copy code snippet"}
                 </button>
               </div>
-              <pre className="mt-3 overflow-x-auto rounded-lg border border-zinc-800 bg-zinc-950 p-2.5 text-[11px] text-zinc-300">
-                <code>
+              <pre className="mt-3 max-w-full overflow-x-auto rounded-lg border border-zinc-800 bg-zinc-950 p-2.5 text-[11px] text-zinc-300">
+                <code className="block overflow-x-auto font-mono">
                   {buildMetadataSnippet(ogApiPath, selectedTemplate.name)}
                 </code>
               </pre>

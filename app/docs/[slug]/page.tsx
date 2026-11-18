@@ -52,8 +52,8 @@ async function DocArticleContent({
   const { url, isPlaceholder } = getSiteUrlConfig();
 
   return (
-    <main className="mx-auto grid max-w-6xl gap-10 px-6 py-10 lg:grid-cols-[240px_1fr]">
-      <aside aria-label="Documentation sidebar" className="lg:sticky lg:top-8 lg:self-start">
+    <main className="mx-auto grid max-w-6xl gap-10 px-4 py-10 sm:px-6 lg:grid-cols-[240px_1fr]">
+      <aside aria-label="Documentation sidebar" className="min-w-0 lg:sticky lg:top-8 lg:self-start">
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4">
           <Link
             href="/docs"
@@ -93,10 +93,10 @@ async function DocArticleContent({
           </p>
 
           {isPlaceholder ? (
-            <p className="mt-4 rounded-lg border border-amber-500/30 bg-amber-950/20 px-3 py-2 text-xs text-amber-200">
+            <p className="mt-4 break-words rounded-lg border border-amber-500/30 bg-amber-950/20 px-3 py-2 text-xs text-amber-200">
               Install commands on this page use the placeholder URL{" "}
-              <code className="font-mono">{url}</code> — set{" "}
-              <code className="font-mono">NEXT_PUBLIC_SITE_URL</code> for your
+              <code className="break-all font-mono">{url}</code> — set{" "}
+              <code className="break-words font-mono">NEXT_PUBLIC_SITE_URL</code> for your
               deployment domain.
             </p>
           ) : null}

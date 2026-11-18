@@ -16,10 +16,10 @@ export default function HomePage() {
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
       <SiteHeader active="gallery" />
 
-      <main className="mx-auto flex max-w-7xl flex-col gap-16 px-6 py-12 sm:py-16">
+      <main className="mx-auto flex max-w-7xl flex-col gap-16 px-4 py-12 sm:px-6 sm:py-16">
         {/* Hero */}
         <section className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
-          <div className="flex flex-col gap-6">
+          <div className="flex min-w-0 flex-col gap-6">
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/80 px-3 py-1 text-xs font-medium text-sky-300">
               <span>{allTemplates.length} installable Next.js OG templates</span>
             </div>
@@ -58,7 +58,7 @@ export default function HomePage() {
           </div>
 
           {/* Demo GIF/video placeholder (launch polish asset scheduled for Phase 6) */}
-          <div className="flex flex-col gap-3 rounded-2xl border border-dashed border-zinc-700 bg-zinc-900/40 p-6">
+          <div className="flex min-w-0 flex-col gap-3 rounded-2xl border border-dashed border-zinc-700 bg-zinc-900/40 p-6">
             <div className="flex items-center justify-between text-xs text-zinc-400">
               <span className="font-semibold uppercase tracking-wider text-amber-300">
                 Demo Video / GIF Placeholder
@@ -73,7 +73,7 @@ export default function HomePage() {
               </p>
               <p className="mt-2 max-w-sm text-xs leading-5 text-zinc-400">
                 Planned walkthrough: run{" "}
-                <code className="font-mono text-zinc-200">npx shadcn add</code>,
+                <code className="break-words font-mono text-zinc-200">npx shadcn add</code>,
                 edit parameters live in{" "}
                 <Link
                   href="/playground"
