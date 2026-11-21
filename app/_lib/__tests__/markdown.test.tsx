@@ -88,4 +88,21 @@ describe("markdown token-to-JSX renderer", () => {
       "/playground",
     ]);
   });
+
+  it("renders fenced code blocks with language header, copy button, scrollable pre, and break-words inline code", () => {
+    const md = [
+      "Use `npm run build` first.",
+      "",
+      "```bash",
+      "npx shadcn@latest add https://ogami-toolkit.vercel.app/r/github-repo.json",
+      "```",
+    ].join("\n");
+
+    const html = renderToStaticMarkup(<MarkdownArticle source={md} />);
+    expect(html).toContain("break-words");
+    expect(html).toContain("bash");
+    expect(html).toContain("Copy code");
+    expect(html).toContain("overflow-x-auto");
+    expect(html).toContain("min-h-11");
+  });
 });

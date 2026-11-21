@@ -1,9 +1,16 @@
+import { existsSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { allTemplates, templateIds } from "@/registry/templates";
 import { buildRegistryPayloads } from "@/scripts/build-registry";
-import { DEFAULT_SITE_URL, getSiteUrlConfig } from "@/site.config";
+import { FOOTER_DOC_LINKS } from "@/app/_components/site-footer";
+import {
+  DEFAULT_SITE_URL,
+  GITHUB_REPO_URL,
+  MIT_LICENSE_URL,
+  getSiteUrlConfig,
+} from "@/site.config";
 import { getAllDocPages, getDocBySlug } from "../docs";
 import { extractMarkdownLinks } from "../markdown";
 import { extractTemplateParamTable } from "../schema-table";
@@ -15,11 +22,21 @@ import {
 
 describe("Phase 4b site and gallery contracts", () => {
   it("maps an explicit static preview image and descriptive alt text for every registered template", () => {
+    expect(Object.keys(TEMPLATE_PREVIEWS).length).toBe(allTemplates.length);
     expect(Object.keys(TEMPLATE_PREVIEWS).sort()).toEqual(
       [...templateIds].sort(),
     );
 
     for (const template of allTemplates) {
+      const previewPath = path.join(
+        process.cwd(),
+        "registry",
+        "templates",
+        template.id,
+        "preview.png",
+      );
+      expect(existsSync(previewPath)).toBe(true);
+
       const preview = getTemplatePreview(template.id);
       expect(preview).toBeDefined();
 
@@ -44,6 +61,7 @@ describe("Phase 4b site and gallery contracts", () => {
       "supported-scripts",
       "faq",
     ]);
+    expect(FOOTER_DOC_LINKS.map((d) => d.slug)).toEqual(slugs);
 
     for (const doc of docs) {
       const loaded = await getDocBySlug(doc.slug);
@@ -94,6 +112,11 @@ describe("Phase 4b site and gallery contracts", () => {
   });
 
   it("keeps site URL configurable for pages while keeping registry output independent of NEXT_PUBLIC_SITE_URL", async () => {
+    expect(GITHUB_REPO_URL).toBe("https://github.com/arpitneewaliya/ogami");
+    expect(MIT_LICENSE_URL).toBe(
+      "https://github.com/arpitneewaliya/ogami/blob/main/LICENSE",
+    );
+
     const original = process.env.NEXT_PUBLIC_SITE_URL;
     try {
       delete process.env.NEXT_PUBLIC_SITE_URL;

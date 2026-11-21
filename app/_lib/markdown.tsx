@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { marked, type Token, type Tokens } from "marked";
+import CopyButton from "@/app/_components/copy-button";
 
 export interface DocFrontmatter {
   title: string;
@@ -127,6 +128,9 @@ function isInternalHref(href: string): boolean {
   return href.startsWith("/") || href.startsWith("#");
 }
 
+const proseLinkClassName =
+  "inline-flex min-h-11 min-w-11 max-w-full break-words items-center justify-center rounded-md px-1.5 font-medium text-accent underline decoration-accent/50 underline-offset-4 transition hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
+
 function renderInlineTokens(
   tokens: readonly Token[] | undefined,
   keyPrefix: string,
@@ -155,7 +159,7 @@ function renderInlineTokens(
       case "strong": {
         const strongToken = token as Tokens.Strong;
         return (
-          <strong key={key} className="font-semibold text-zinc-100">
+          <strong key={key} className="font-semibold text-foreground">
             {renderInlineTokens(strongToken.tokens, key)}
           </strong>
         );
@@ -163,7 +167,7 @@ function renderInlineTokens(
       case "em": {
         const emToken = token as Tokens.Em;
         return (
-          <em key={key} className="italic text-zinc-200">
+          <em key={key} className="italic text-foreground">
             {renderInlineTokens(emToken.tokens, key)}
           </em>
         );
@@ -171,7 +175,7 @@ function renderInlineTokens(
       case "del": {
         const delToken = token as Tokens.Del;
         return (
-          <del key={key} className="text-zinc-400">
+          <del key={key} className="text-muted">
             {renderInlineTokens(delToken.tokens, key)}
           </del>
         );
@@ -181,7 +185,7 @@ function renderInlineTokens(
         return (
           <code
             key={key}
-            className="break-words rounded border border-zinc-800 bg-zinc-900 px-1.5 py-0.5 font-mono text-[0.875em] text-sky-300"
+            className="break-words rounded border border-border bg-surface-muted px-1.5 py-0.5 font-mono text-[0.875em] text-accent"
           >
             {codeToken.text}
           </code>
@@ -195,7 +199,7 @@ function renderInlineTokens(
         const content = renderInlineTokens(linkToken.tokens, key);
         if (!safeHref) {
           return (
-            <span key={key} className="text-zinc-300">
+            <span key={key} className="text-foreground-secondary">
               {content}
             </span>
           );
@@ -206,7 +210,7 @@ function renderInlineTokens(
               key={key}
               href={safeHref}
               title={linkToken.title ?? undefined}
-              className="font-medium text-sky-400 underline decoration-sky-400/40 underline-offset-4 transition hover:text-sky-300 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
+              className={proseLinkClassName}
             >
               {content}
             </Link>
@@ -221,7 +225,7 @@ function renderInlineTokens(
             rel={
               safeHref.startsWith("mailto:") ? undefined : "noopener noreferrer"
             }
-            className="font-medium text-sky-400 underline decoration-sky-400/40 underline-offset-4 transition hover:text-sky-300 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
+            className={proseLinkClassName}
           >
             {content}
           </a>
@@ -263,7 +267,7 @@ function renderBlockTokens(
             <h1
               key={key}
               id={id}
-              className="mt-8 text-3xl font-bold tracking-tight text-zinc-50 first:mt-0"
+              className="mt-8 text-3xl font-bold tracking-tight text-foreground first:mt-0"
             >
               {children}
             </h1>
@@ -274,7 +278,7 @@ function renderBlockTokens(
             <h2
               key={key}
               id={id}
-              className="mt-10 border-b border-zinc-800 pb-2 text-2xl font-semibold tracking-tight text-zinc-100 first:mt-0"
+              className="mt-10 border-b border-border pb-2 text-2xl font-semibold tracking-tight text-foreground first:mt-0"
             >
               {children}
             </h2>
@@ -285,14 +289,18 @@ function renderBlockTokens(
             <h3
               key={key}
               id={id}
-              className="mt-7 text-lg font-semibold text-zinc-100"
+              className="mt-7 text-lg font-semibold text-foreground"
             >
               {children}
             </h3>
           );
         }
         return (
-          <h4 key={key} id={id} className="mt-5 text-base font-semibold text-zinc-200">
+          <h4
+            key={key}
+            id={id}
+            className="mt-5 text-base font-semibold text-foreground"
+          >
             {children}
           </h4>
         );
@@ -300,7 +308,10 @@ function renderBlockTokens(
       case "paragraph": {
         const pToken = token as Tokens.Paragraph;
         return (
-          <p key={key} className="mt-4 leading-7 text-zinc-300 first:mt-0">
+          <p
+            key={key}
+            className="mt-4 leading-7 text-foreground-secondary first:mt-0"
+          >
             {renderInlineTokens(pToken.tokens, key)}
           </p>
         );
@@ -310,7 +321,7 @@ function renderBlockTokens(
         return (
           <blockquote
             key={key}
-            className="mt-5 rounded-r-lg border-l-4 border-sky-500/70 bg-zinc-900/70 px-4 py-3 text-sm text-zinc-200"
+            className="mt-5 rounded-r-xl border-y border-r border-l-4 border-border border-l-accent bg-surface-muted px-4 py-3 text-sm text-foreground-secondary"
           >
             {renderBlockTokens(quoteToken.tokens, key)}
           </blockquote>
@@ -319,17 +330,22 @@ function renderBlockTokens(
       case "code": {
         const codeToken = token as Tokens.Code;
         return (
-          <pre
+          <div
             key={key}
-            className="mt-5 max-w-full overflow-x-auto rounded-lg border border-zinc-800 bg-zinc-900/90 p-4 text-xs leading-6 text-zinc-100"
+            className="mt-5 overflow-hidden rounded-xl border border-border bg-surface-muted"
           >
-            {codeToken.lang ? (
-              <div className="mb-2 text-[10px] font-medium uppercase tracking-wider text-zinc-500">
-                {codeToken.lang}
-              </div>
-            ) : null}
-            <code className="block overflow-x-auto font-mono">{codeToken.text}</code>
-          </pre>
+            <div className="flex items-center justify-between gap-2 border-b border-border bg-surface px-3.5 py-1.5">
+              <span className="font-mono text-xs font-semibold uppercase tracking-wider text-muted">
+                {codeToken.lang || "code"}
+              </span>
+              <CopyButton text={codeToken.text} label="Copy code" />
+            </div>
+            <pre className="max-w-full overflow-x-auto p-4 text-xs leading-6 text-foreground">
+              <code className="block overflow-x-auto font-mono">
+                {codeToken.text}
+              </code>
+            </pre>
+          </div>
         );
       }
       case "list": {
@@ -338,7 +354,7 @@ function renderBlockTokens(
         return (
           <ListTag
             key={key}
-            className={`mt-4 space-y-2 pl-6 text-zinc-300 ${
+            className={`mt-4 space-y-2 pl-6 text-foreground-secondary ${
               listToken.ordered ? "list-decimal" : "list-disc"
             }`}
           >
@@ -360,28 +376,28 @@ function renderBlockTokens(
         return <span key={key}>{textToken.text}</span>;
       }
       case "hr":
-        return <hr key={key} className="my-8 border-zinc-800" />;
+        return <hr key={key} className="my-8 border-border" />;
       case "table": {
         const tableToken = token as Tokens.Table;
         return (
           <div
             key={key}
-            className="mt-6 overflow-x-auto rounded-lg border border-zinc-800"
+            className="mt-6 max-w-full overflow-x-auto rounded-xl border border-border bg-surface"
           >
             <table className="w-full border-collapse text-left text-sm">
-              <thead className="bg-zinc-900/90 text-xs uppercase tracking-wider text-zinc-400">
+              <thead className="bg-surface-muted text-xs uppercase tracking-wider text-muted">
                 <tr>
                   {tableToken.header.map((cell, cellIdx) => (
                     <th
                       key={`${key}-th-${cellIdx}`}
-                      className="border-b border-zinc-800 px-4 py-3 font-semibold"
+                      className="border-b border-border px-4 py-3 font-semibold"
                     >
                       {renderInlineTokens(cell.tokens, `${key}-th-${cellIdx}`)}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-800/80 bg-zinc-950/60 text-zinc-300">
+              <tbody className="divide-y divide-border bg-surface text-foreground-secondary">
                 {tableToken.rows.map((row, rowIdx) => (
                   <tr key={`${key}-row-${rowIdx}`}>
                     {row.map((cell, cellIdx) => (

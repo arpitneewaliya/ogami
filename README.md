@@ -9,10 +9,10 @@
 Install any template directly into your Next.js App Router project (`zod@^4` required; no `shadcn init` needed):
 
 ```bash
-npx shadcn@latest add https://ogami.example.com/r/github-repo.json
+npx shadcn@latest add https://ogami-toolkit.vercel.app/r/github-repo.json
 ```
 
-> **Placeholder URL notice:** `https://ogami.example.com` is a placeholder domain until a production domain is chosen. Set `NEXT_PUBLIC_SITE_URL` when deploying the Ogami gallery site.
+> **Placeholder URL notice:** `https://ogami-toolkit.vercel.app` is the default deployment URL (`DEFAULT_SITE_URL` in `site.config.ts`). Set `NEXT_PUBLIC_SITE_URL` when deploying a custom Ogami gallery host.
 
 See [Quick Start](content/docs/quick-start.md) (or `/docs/quick-start` on the site) for the `app/api/og/route.tsx` snippet, `--src-dir` / `@/*` path alias notes, and `generateMetadata` usage.
 

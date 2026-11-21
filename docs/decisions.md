@@ -67,7 +67,7 @@ Short log of key technical decisions made in Phases 0 and 1 (per `docs/PROJECT_B
 - **Decision:**
   - Serve gallery and detail previews via explicit static PNG imports (`app/_lib/template-previews.ts`) rather than copying to `public/` or calling `/api/og`.
   - Render docs Markdown with pinned `marked@18.2.1` via a token-to-JSX renderer (`app/_lib/markdown.tsx`) that drops raw HTML tokens and allows only `http:`, `https:`, `mailto:`, and safe relative links.
-  - Centralize the site URL in `site.config.ts` (`DEFAULT_SITE_URL = "https://ogami.example.com"`, overridable via `NEXT_PUBLIC_SITE_URL` for site pages), while `scripts/build-registry.ts` uses only `DEFAULT_SITE_URL` so `public/r/` is deterministic across machines/CI.
+  - Centralize the site URL in `site.config.ts` (`DEFAULT_SITE_URL = "https://ogami-toolkit.vercel.app"`, overridable via `NEXT_PUBLIC_SITE_URL` for site pages), while `scripts/build-registry.ts` uses only `DEFAULT_SITE_URL` so `public/r/` is deterministic across machines/CI.
   - Use `generateStaticParams()` + `notFound()` without `export const dynamicParams = false` on `/templates/[id]` and `/docs/[slug]`.
 - **Observed `cacheComponents` + `partialPrefetching` behavior (Phase 4b):** Next.js `16.4.6` forbids `dynamicParams = false` when `cacheComponents: true` is enabled. Every generated template/doc path prerenders as full static HTML (`○ (Static)`, `x-nextjs-cache: HIT`), while unknown `/templates/<id>` and `/docs/<slug>` requests serve the prerendered App Shell with HTTP `200` and stream Next's 404 UI plus `<meta name="robots" content="noindex" />`.
 

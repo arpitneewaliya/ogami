@@ -72,7 +72,7 @@ export default function PlaygroundPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center bg-zinc-950 text-sm text-zinc-400">
+        <div className="flex flex-1 items-center justify-center bg-background text-sm text-muted">
           Loading Ogami Playground...
         </div>
       }

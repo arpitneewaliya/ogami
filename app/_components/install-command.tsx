@@ -16,18 +16,18 @@ export default function InstallCommand({
   return (
     <div className="flex min-w-0 flex-col gap-2">
       <div
-        className={`flex min-w-0 items-center justify-between gap-3 rounded-lg border border-zinc-800 bg-zinc-900/90 ${
-          compact ? "px-3 py-2" : "px-4 py-3"
+        className={`flex min-w-0 items-center justify-between gap-3 rounded-lg border border-border bg-surface-muted ${
+          compact ? "px-3 py-1.5" : "px-4 py-2"
         }`}
       >
-        <code className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap font-mono text-xs text-sky-300 sm:text-sm">
+        <code className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap py-1 font-mono text-xs text-accent sm:text-sm">
           {command}
         </code>
         <CopyButton text={command} label="Copy command" />
       </div>
 
       {isPlaceholder ? (
-        <p className="break-words text-xs text-amber-300/90">
+        <p className="break-words text-xs text-status-warn">
           Placeholder URL (<code className="break-all font-mono">{url}</code>) — set{" "}
           <code className="break-words font-mono">NEXT_PUBLIC_SITE_URL</code> to switch to
           your deployed registry domain.

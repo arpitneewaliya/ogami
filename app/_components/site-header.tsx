@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { GITHUB_REPO_URL } from "@/site.config";
+import ThemeToggle from "./theme-toggle";
 
 interface SiteHeaderProps {
   active?: "gallery" | "templates" | "playground" | "docs";
@@ -16,20 +18,23 @@ export default function SiteHeader({ active }: SiteHeaderProps) {
   ];
 
   return (
-    <header className="border-b border-zinc-800/80 bg-zinc-950/90">
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-3 sm:px-6 sm:py-4">
+    <header className="border-b border-border bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/85">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-2.5 sm:flex-nowrap sm:px-6 sm:py-3">
         <Link
           href="/"
-          className="flex items-center gap-2.5 text-base font-semibold tracking-tight text-zinc-50 hover:text-sky-400 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
+          className="order-1 inline-flex min-h-11 min-w-11 items-center gap-2.5 rounded-lg px-2 text-base font-semibold tracking-tight text-foreground transition hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           <span
             aria-hidden="true"
-            className="inline-block h-2.5 w-2.5 rounded-full bg-sky-400"
+            className="inline-block h-2.5 w-2.5 rounded-full bg-accent"
           />
           <span>Ogami</span>
         </Link>
 
-        <nav aria-label="Main navigation" className="flex items-center gap-1 sm:gap-2">
+        <nav
+          aria-label="Main navigation"
+          className="order-3 grid w-full grid-cols-3 gap-1 border-t border-border pt-2 sm:order-2 sm:flex sm:w-auto sm:items-center sm:gap-1.5 sm:border-t-0 sm:pt-0"
+        >
           {navItems.map((item) => {
             const isActive =
               active === item.key ||
@@ -38,10 +43,11 @@ export default function SiteHeader({ active }: SiteHeaderProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`rounded-md px-2.5 py-1.5 text-xs font-medium transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 sm:px-3 sm:text-sm ${
+                aria-current={isActive ? "page" : undefined}
+                className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg px-3 py-2 text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
                   isActive
-                    ? "bg-zinc-800 text-zinc-50"
-                    : "text-zinc-300 hover:bg-zinc-900 hover:text-zinc-50"
+                    ? "border border-border-strong/70 bg-surface-muted text-foreground"
+                    : "text-foreground-secondary hover:bg-surface-muted hover:text-foreground"
                 }`}
               >
                 {item.label}
@@ -49,6 +55,31 @@ export default function SiteHeader({ active }: SiteHeaderProps) {
             );
           })}
         </nav>
+
+        <div className="order-2 flex items-center gap-1.5 sm:order-3 sm:gap-2">
+          <a
+            href={GITHUB_REPO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub repository"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-lg border border-border bg-surface px-2.5 text-sm font-medium text-foreground-secondary transition hover:border-border-strong hover:bg-surface-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:px-3"
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              className="h-[18px] w-[18px] shrink-0"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2Z"
+              />
+            </svg>
+            <span className="sr-only md:not-sr-only md:inline">GitHub</span>
+          </a>
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );
